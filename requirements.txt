@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotlib
+paddlepaddle          	# IF running with CPU only; do not install both paddlepaddle and paddlepaddle-gpu
+paddlepaddle-gpu    	# IF running with an NVIDIA GPU; do not install both paddlepaddle and paddlepaddle-gpu
+paddleocr
+#cupy-cuda12x		# IF running with an NVIDIA GPU; replace 12x with your CUDA version (e.g. cupy-cuda11x)

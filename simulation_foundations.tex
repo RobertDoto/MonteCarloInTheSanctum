@@ -1,0 +1,460 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{codelink}{Code link}
+
+\title{\textbf{Mathematical Foundations of the\\Expected Points Simulator}\\[0.3em]
+\large Theory Behind the Implementation Decisions}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ==============================================================
+\section{Introduction}
+% ==============================================================
+
+The loot system awards items from a pool of 753 possibilities across three subsets (1 in Subset 1, 10 in Subset 2, and 742 in Subset 3). Each roll selects one item according to a probability distribution that changes over time: one-time items are removed after collection, and their probability is redistributed among remaining items within the same subset. The system also includes pity mechanics that force outcomes after streaks of bad luck.
+
+We wish to answer the question: \emph{after $N$ rolls, how many points can a player expect to have accumulated?} This document explains why an analytical solution is intractable, why Monte Carlo simulation is used instead, and the mathematical theory behind each implementation decision.
+
+% ==============================================================
+\section{Why Monte Carlo Simulation?}
+% ==============================================================
+
+\subsection{The state space problem}
+
+The loot pool contains 748 one-time items (1 in Subset 1, 10 in Subset 2, 263 emotes and 474 icons in Subset 3). Each one-time item is either collected or uncollected. The state of the system at any point is determined by \emph{which} items have been collected, which means the number of possible states is:
+\[
+2^{748} \approx 10^{225}
+\]
+
+This is the number of subsets of 748 items --- each item is independently either collected (1) or not (0), giving two choices per item. To solve the expected points problem analytically, we would need to track the probability of being in each of these states after every roll, and compute the expected reward from each state. This is computationally impossible.
+
+\begin{remark}
+The initial pool of 753 items mentioned in the introduction includes 5 permanent items in Subset 3 that can be rolled repeatedly and are never removed. These do not contribute to the state space because they have no collected/uncollected distinction --- they are always present. The $2^{748}$ count reflects only the one-time items, each of which creates a binary state variable. The full CSV contains 755 entries: the 753 initial items plus 2 permanent rewards (270 pts and 35 pts) that activate upon completing Subsets 1 and 2 respectively.
+\end{remark}
+
+\begin{remark}
+For context, $10^{225}$ exceeds the estimated number of atoms in the observable universe ($\approx 10^{80}$) by a factor of $10^{145}$.
+\end{remark}
+
+\subsection{The Monte Carlo approach}
+
+Instead of computing exact probabilities across all states, we \emph{simulate} the process many times with random numbers and observe the outcomes. Each simulation independently plays through $N$ rolls, tracking which items are collected and how many points are earned. After running $S$ simulations, we estimate the expected cumulative points at roll $n$ as:
+\[
+\hat{\mu}_n = \frac{1}{S} \sum_{i=1}^{S} X_{n,i}
+\]
+
+where $X_{n,i}$ is the cumulative points earned by simulation $i$ after $n$ rolls, and the hat notation $\hat{\mu}$ indicates this is an \emph{estimate} of the true expected value $\mu_n$, not the exact value.
+
+The question is: why should we trust this estimate?
+
+% ==============================================================
+\section{Law of Large Numbers}
+% ==============================================================
+
+\subsection{Statement}
+
+The \textbf{law of large numbers} guarantees that the sample mean converges to the true expected value as the number of samples increases. Formally, for independent and identically distributed random variables $X_1, X_2, \ldots, X_S$ with finite expected value $\mu$:
+\[
+\hat{\mu}_S = \frac{1}{S} \sum_{i=1}^{S} X_i \xrightarrow{S \to \infty} \mu
+\]
+
+The notation $\xrightarrow{S \to \infty}$ means ``converges as $S$ grows to infinity.'' In practice, we do not need infinite simulations --- we need enough that the estimate is sufficiently close to the true value.
+
+\subsection{Application to the simulation}
+
+Each simulation produces independent results because each uses its own sequence of random numbers. The cumulative points $X_{n,1}, X_{n,2}, \ldots, X_{n,S}$ at any fixed roll $n$ are independent and identically distributed (they all follow the same loot system rules). Therefore, the law of large numbers guarantees that the average over $S = 300{,}000$ simulations converges to the true expected value.
+
+\subsection{How close is the estimate?}
+
+The \textbf{standard error} of the sample mean quantifies the precision of our estimate:
+\[
+\text{SE} = \frac{\sigma}{\sqrt{S}}
+\]
+
+where $\sigma$ is the standard deviation of the individual simulation outcomes, and $S$ is the number of simulations. This formula tells us that precision improves with the \emph{square root} of the number of simulations:
+
+\begin{center}
+\begin{tabular}{@{}rc@{}}
+\toprule
+Simulations ($S$) & Relative precision \\
+\midrule
+1{,}000    & $\sigma / 31.6$ \\
+10{,}000   & $\sigma / 100$ \\
+100{,}000  & $\sigma / 316$ \\
+300{,}000  & $\sigma / 548$ \\
+1{,}000{,}000 & $\sigma / 1{,}000$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Increasing from 100{,}000 to 1{,}000{,}000 simulations (a 10$\times$ increase in computation) only improves precision by a factor of $\sqrt{10} \approx 3.16$. This diminishing return is why the simulation uses 300{,}000 simulations --- a balance between precision and computation time.
+
+\begin{codelink}
+The standard error is not computed directly in the code, but the closely related standard deviation is recorded every roll as \texttt{cum\_stds[roll]}, computed with \texttt{ddof=1} (sample standard deviation). Dividing this by $\sqrt{S}$ gives the standard error.
+\end{codelink}
+
+% ==============================================================
+\section{Two-Stage Sampling}
+% ==============================================================
+
+\subsection{The problem}
+
+The loot pool contains 753 items, each with its own probability. The na\"ive approach would be to construct a single probability distribution over all 753 items every roll and sample from it. However, when a one-time item is collected and removed, the probabilities of \emph{all} remaining items change (due to redistribution), requiring the entire distribution to be rebuilt.
+
+\subsection{Law of total probability}
+
+The simulation instead uses a \textbf{two-stage sampling} approach. The mathematical justification is the \textbf{law of total probability}. Given mutually exclusive and exhaustive events $B_1, B_2, \ldots, B_m$ (events that do not overlap and together cover all possibilities), the probability of any event $A$ is:
+\[
+P(A) = \sum_{j=1}^{m} P(A \mid B_j) \cdot P(B_j)
+\]
+
+where $P(A \mid B_j)$ is the \textbf{conditional probability} of $A$ given $B_j$ --- read as ``the probability of $A$, given that $B_j$ has occurred.''
+
+\subsection{Application to subset selection}
+
+The three subsets are mutually exclusive (an item belongs to exactly one subset) and exhaustive (every item belongs to some subset). Their total probabilities are fixed:
+\begin{align*}
+P(\text{Subset 1}) &= 0.005 \\
+P(\text{Subset 2}) &= 0.100 \\
+P(\text{Subset 3}) &= 0.895
+\end{align*}
+
+The probability of rolling any specific item $A$ can be decomposed as:
+\[
+P(A) = P(A \mid \text{Sub.\ 1}) \cdot 0.005 + P(A \mid \text{Sub.\ 2}) \cdot 0.100 + P(A \mid \text{Sub.\ 3}) \cdot 0.895
+\]
+
+If item $A$ belongs to Subset 3, then $P(A \mid \text{Sub.\ 1}) = 0$ and $P(A \mid \text{Sub.\ 2}) = 0$, so this reduces to:
+\[
+P(A) = P(A \mid \text{Sub.\ 3}) \cdot 0.895
+\]
+
+This means we can equivalently sample in two steps:
+\begin{enumerate}[itemsep=4pt]
+\item \textbf{Choose a subset} using the fixed probabilities $(0.005, 0.100, 0.895)$.
+\item \textbf{Choose an item within that subset} using the conditional probabilities.
+\end{enumerate}
+
+The result is identical to sampling from the full 753-item distribution.
+
+\subsection{Why this matters}
+
+The key insight is that redistribution only occurs \emph{within} a subset. When a one-time item is removed from Subset 3, its probability is split among the remaining Subset 3 items. This changes the conditional probabilities $P(A \mid \text{Sub.\ 3})$, but it does not change the total probability $P(\text{Sub.\ 3}) = 0.895$. 
+
+Therefore, Step 1 never changes --- the subset selection probabilities are constant regardless of how many items have been collected. Only Step 2 needs updating, and only for the specific subset that was selected. This avoids rebuilding a 753-item distribution every roll.
+
+\begin{codelink}
+In the code, Step 1 is performed by \texttt{xp.searchsorted(subset\_cdf, r)}, where \texttt{subset\_cdf} is precomputed once and never changes. Step 2 is performed separately within each subset's resolution block (Steps 3a, 3b, 3c in the simulation loop).
+\end{codelink}
+
+% ==============================================================
+\section{Inverse CDF Sampling}
+% ==============================================================
+
+\subsection{The problem}
+
+Given a discrete probability distribution over $m$ outcomes, we need to randomly select one outcome according to those probabilities. For example, within Subset 3 we might have 7 categories with probabilities:
+\[
+(p_1, p_2, p_3, p_4, p_5, p_6, p_7) = (0.62, 0.11, 0.008, 0.002, 0.001, 0.16, 0.10)
+\]
+
+We need a method that selects category 1 about 62\% of the time, category 2 about 11\% of the time, and so on.
+
+\subsection{The cumulative distribution function}
+
+The \textbf{cumulative distribution function} (CDF) is formed by taking a running total of the probabilities:
+\[
+F(k) = \sum_{i=1}^{k} p_i
+\]
+
+This means each entry is the sum of all probabilities up to and including that position:
+\begin{align*}
+F(1) &= 0.62 \\
+F(2) &= 0.62 + 0.11 = 0.73 \\
+F(3) &= 0.73 + 0.008 = 0.738 \\
+F(4) &= 0.738 + 0.002 = 0.740 \\
+F(5) &= 0.740 + 0.001 = 0.741 \\
+F(6) &= 0.741 + 0.16 = 0.901 \\
+F(7) &= 0.901 + 0.10 = 1.001 \approx 1.0
+\end{align*}
+
+The CDF partitions the interval $[0, 1)$ into segments, where the width of each segment equals the probability of the corresponding outcome:
+\[
+\underbrace{0 \text{ --- } 0.62}_{\text{cat.\ 1}} \;\;
+\underbrace{0.62 \text{ --- } 0.73}_{\text{cat.\ 2}} \;\;
+\underbrace{0.73 \text{ --- } 0.738}_{\text{cat.\ 3}} \;\;
+\cdots \;\;
+\underbrace{0.901 \text{ --- } 1.0}_{\text{cat.\ 7}}
+\]
+
+\subsection{The sampling method}
+
+To sample from this distribution:
+\begin{enumerate}[itemsep=4pt]
+\item Generate a uniform random number $r \in [0, 1)$.
+\item Find which segment $r$ falls into by counting how many CDF entries are $\leq r$.
+\end{enumerate}
+
+The count gives the index of the selected outcome. For example, if $r = 0.71$:
+\begin{alignat*}{3}
+F(1) &= 0.62  &&\leq 0.71 \quad &&\text{True} \\
+F(2) &= 0.73  &&\leq 0.71 \quad &&\text{False} \\
+F(3) &= 0.738 &&\leq 0.71 \quad &&\text{False} \\
+     &\;\;\vdots && &&
+\end{alignat*}
+
+Count of True values $= 1$, so category 2 is selected (using 0-based indexing, the count gives the index of the first CDF entry that exceeds $r$).
+
+\subsection{Why this is correct}
+
+The probability that $r$ falls in the segment for category $k$ equals the width of that segment, which equals $p_k$. Since $r$ is uniformly distributed on $[0, 1)$, every point in the interval is equally likely, so wider segments (higher-probability outcomes) are hit more often. This is a standard result from probability theory known as the \textbf{probability integral transform}.
+
+\begin{codelink}
+In the code, the CDF is computed by \texttt{xp.cumsum()} and the lookup is performed by \texttt{(cdf <= r).sum(axis=1)}. The comparison produces a boolean array (True/False for each CDF entry), and \texttt{.sum()} counts the True values, yielding the selected index. The \texttt{xp.clip()} call ensures the index stays within valid bounds.
+\end{codelink}
+
+% ==============================================================
+\section{Probability Redistribution}
+% ==============================================================
+
+\subsection{The mechanism}
+
+When a one-time item is collected, it is removed from the pool. Its probability must go somewhere --- it is split equally among the remaining items \emph{within the same subset}. The claim is that this preserves the subset's total probability.
+
+\subsection{Proof of preservation}
+
+\begin{proposition}
+Redistributing a removed item's probability equally among remaining items within a subset preserves the subset's total probability.
+\end{proposition}
+
+\begin{proof}
+Let a subset contain $m$ items with probabilities $p_1, p_2, \ldots, p_m$. The total subset probability is:
+\[
+P_{\text{total}} = \sum_{i=1}^{m} p_i
+\]
+
+Suppose item 1 is collected and removed. Its probability $p_1$ is divided equally among the remaining $m - 1$ items. Each remaining item $i$ (for $i = 2, 3, \ldots, m$) receives a bonus of:
+\[
+b = \frac{p_1}{m - 1}
+\]
+
+The new probability of each remaining item is $p_i + b$, and the new total is:
+\begin{align*}
+P_{\text{total}}' &= \sum_{i=2}^{m} (p_i + b) \\[6pt]
+&= \sum_{i=2}^{m} p_i + \sum_{i=2}^{m} b \\[6pt]
+&= \sum_{i=2}^{m} p_i + (m-1) \cdot \frac{p_1}{m-1} \\[6pt]
+&= \sum_{i=2}^{m} p_i + p_1 \\[6pt]
+&= \sum_{i=1}^{m} p_i \\[6pt]
+&= P_{\text{total}}
+\end{align*}
+
+The total is unchanged. The removed item's probability has been fully absorbed by the remaining items.
+\end{proof}
+
+\subsection{Why equal redistribution?}
+
+Equal redistribution is one of many possible schemes. An alternative would be \emph{proportional} redistribution, where each remaining item receives a share proportional to its existing probability. The choice of equal redistribution is a design decision of the loot system, not a mathematical necessity. The preservation property holds under any redistribution scheme that distributes the full amount $p_1$ among the remaining items --- the proof above only requires that the bonuses sum to $p_1$.
+
+\subsection{Connection to two-stage sampling}
+
+This preservation is precisely why two-stage sampling works across all rolls. Since redistribution keeps each subset's total probability constant, the first stage (subset selection) never needs updating. If redistribution crossed subset boundaries --- for example, if removing a Subset 3 item increased the probability of a Subset 2 item --- the subset totals would shift and the fixed CDF used in Stage 1 would become incorrect.
+
+\begin{codelink}
+In the code, the redistribution for Subset 2 items is computed as:
+\begin{align*}
+\texttt{removed\_sum} &= \text{sum of base probabilities of collected items} \\
+\texttt{n\_rem} &= \text{number of uncollected items} \\
+\texttt{bonus} &= \texttt{removed\_sum} / \texttt{n\_rem}
+\end{align*}
+Each uncollected item's probability becomes its base probability plus the bonus. The same logic applies within Subset 3, extended to account for the tier grouping optimisation.
+\end{codelink}
+
+% ==============================================================
+\section{Tier Grouping}
+% ==============================================================
+
+\subsection{The problem}
+
+Subset 3 contains 737 one-time items. Tracking each individually across 300{,}000 simulations would require a boolean array of shape $(300{,}000 \times 737)$, and every roll would involve operations on this array. This is expensive in both memory and computation.
+
+\subsection{The observation}
+
+All 263 emotes have the same base probability:
+\[
+p_{\text{emote}} = \frac{14{,}053}{263{,}000 \times 100} = \frac{14{,}053}{26{,}300{,}000} \approx 5.343 \times 10^{-4}
+\]
+
+and all 474 icons have the same (different) base probability:
+\[
+p_{\text{icon}} = \frac{14{,}053}{474{,}000 \times 100} = \frac{14{,}053}{47{,}400{,}000} \approx 2.965 \times 10^{-4}
+\]
+
+Since items within a tier are identical in probability and point value, we do not need to know \emph{which} specific emote was collected --- only \emph{how many} emotes remain.
+
+\subsection{Equivalence}
+
+Let $a$ be the number of remaining emotes and $b$ the number of remaining icons. After redistribution, the total probability of hitting \emph{any} emote is:
+\[
+P(\text{any emote}) = a \cdot (p_{\text{emote}} + \beta)
+\]
+
+where $\beta$ is the per-item redistribution bonus. This is because there are $a$ emotes, each with the same adjusted probability. We can treat ``all remaining emotes'' as a single category with this combined probability, rather than tracking 263 individual items.
+
+The simulation therefore reduces the 737 individual one-time items in Subset 3 to just 2 group counters (emotes remaining, icons remaining), combined with the 5 permanent items, yielding 7 categories total. Sampling among 7 categories is far cheaper than sampling among 737 items.
+
+\begin{codelink}
+The counters are \texttt{s3\_tier\_a\_remaining} and \texttt{s3\_tier\_b\_remaining}, each an array of length $S$ (one value per simulation). The 7-category probability array is \texttt{cat\_p} with shape $(S, 7)$.
+\end{codelink}
+
+% ==============================================================
+\section{Central Limit Theorem}
+% ==============================================================
+
+\subsection{Statement}
+
+The \textbf{central limit theorem} (CLT) states that the sum of a large number of independent random variables, regardless of their individual distributions, tends toward a normal (Gaussian) distribution. Formally, if $Y_1, Y_2, \ldots, Y_n$ are independent random variables with finite means $\mu_i$ and finite variances $\sigma_i^2$, then as $n \to \infty$:
+\[
+\frac{\sum_{i=1}^{n} Y_i - \sum_{i=1}^{n} \mu_i}{\sqrt{\sum_{i=1}^{n} \sigma_i^2}} \xrightarrow{d} \mathcal{N}(0, 1)
+\]
+
+The notation $\xrightarrow{d}$ means ``converges in distribution,'' and $\mathcal{N}(0,1)$ denotes the standard normal distribution (mean 0, variance 1). In plain terms: if you add up many independent random outcomes and then standardise the total (subtract the mean, divide by the standard deviation), the result looks increasingly like a bell curve.
+
+\subsection{Application to cumulative points}
+
+Each roll $i$ produces a random number of points $Y_i$. The cumulative points after $n$ rolls is:
+\[
+X_n = \sum_{i=1}^{n} Y_i
+\]
+
+The CLT predicts that $X_n$ should be approximately normally distributed for large $n$, even though each individual $Y_i$ has a complicated, non-normal distribution (most rolls give 2--10 points, but occasionally a roll gives 270 points).
+
+\subsection{Why convergence is slow at first}
+
+The CLT requires the individual terms to be ``well-behaved'' enough that no single term dominates the sum. In early rolls, this condition is violated: the S-tier reward (270 points) is vastly larger than typical rewards (2--10 points). Whether a player has hit S1 or not creates a bimodal split --- most players cluster near a low total, while the lucky few who hit S1 early are far to the right. This produces the extreme right skew visible in the early-roll histograms.
+
+As more rolls accumulate, the S1 event eventually occurs for most players (either naturally or via pity by roll 80), and its 270-point contribution becomes a smaller fraction of the growing total. The distribution then converges toward normality.
+
+\subsection{Why convergence plateaus}
+
+The simulation shows that skewness decreases from approximately $+6.8$ at roll 10 to approximately $+0.27$ at roll 500, but then remains at $+0.27$ at roll 1000. This residual skew arises because the 5 permanent items in Subset 3 have highly unequal probabilities:
+
+\begin{center}
+\begin{tabular}{@{}rr@{}}
+\toprule
+Points & Probability \\
+\midrule
+5   & 51.37\% \\
+10  & 9.13\% \\
+25  & 0.63\% \\
+50  & 0.18\% \\
+100 & 0.09\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Once all one-time items are collected, every roll samples from these 5 items. The 100-point item is 20$\times$ more valuable than the 5-point item but occurs roughly 570$\times$ less often, creating a persistent right skew that does not diminish with additional rolls --- the individual roll distribution itself is skewed, and the CLT convergence to normality is correspondingly slow.
+
+\subsection{Practical implication}
+
+At checkpoints where the distribution is approximately normal (skewness near 0), the mean $\pm$ 1.96 standard deviations provides a good 95\% confidence interval. At checkpoints where the distribution is skewed (early rolls), this approximation is unreliable --- the actual percentiles from the simulation should be used instead. The simulation computes both, allowing the user to choose the appropriate summary.
+
+\begin{codelink}
+The distribution snapshots are saved at checkpoint rolls via \texttt{dist\_snapshots[roll+1] = to\_cpu(cumulative\_pts.copy())}. These are analysed by \texttt{print\_distribution\_analysis()}, which computes skewness, kurtosis, and compares the actual 95\% range against the normal approximation. The histograms and Q-Q plots in \texttt{plot\_generation.py} visualise this convergence.
+\end{codelink}
+
+% ==============================================================
+\section{Percentile Estimation}
+% ==============================================================
+
+\subsection{Distribution-free percentiles}
+
+The simulation reports percentiles (p1, p5, p10, p25, p50, p75, p90, p95, p99) at every roll. These are \textbf{distribution-free} estimates --- they make no assumption about the shape of the distribution. The $q$-th percentile is the value below which $q\%$ of the simulation outcomes fall.
+
+\subsection{How they are computed}
+
+Given $S$ simulation outcomes, sort them in ascending order:
+\[
+X_{(1)} \leq X_{(2)} \leq \cdots \leq X_{(S)}
+\]
+
+The $q$-th percentile is the value at position $\lfloor q/100 \cdot S \rfloor$ in this sorted list (with interpolation for non-integer positions). For example, the 5th percentile with $S = 300{,}000$ simulations is approximately the 15{,}000th smallest value.
+
+\subsection{Why percentiles rather than confidence intervals}
+
+A confidence interval based on the normal distribution (mean $\pm$ $z \cdot \sigma$) assumes the data is normally distributed. As shown in Section 8, this assumption fails badly at early rolls where the distribution is heavily skewed. The normal approximation's lower bound can even extend below zero, which is impossible for cumulative points.
+
+Percentiles avoid this problem entirely. The 5th percentile is the 5th percentile regardless of whether the distribution is normal, skewed, bimodal, or any other shape. This is why the simulation reports both: percentiles for practical use, and the normal comparison for understanding how the distribution evolves.
+
+\begin{codelink}
+Percentiles are computed every roll by \texttt{xp.percentile(cumulative\_pts, percentiles\_arr)} and stored in \texttt{pct\_arr}. The normal comparison is computed in \texttt{print\_distribution\_analysis()} as \texttt{mean $\pm$ 1.96 $\times$ std}.
+\end{codelink}
+
+% ==============================================================
+\section{Reproducibility}
+% ==============================================================
+
+\subsection{Pseudorandom number generation}
+
+The simulation uses a \textbf{pseudorandom number generator} (PRNG) --- a deterministic algorithm that produces a sequence of numbers with statistical properties indistinguishable from true randomness. Given the same initial \textbf{seed} value, the PRNG produces the exact same sequence every time.
+
+\subsection{Why fix the seed?}
+
+Fixing the seed (to the value 42 in the implementation) ensures \textbf{reproducibility}: running the simulation twice produces identical results. This is essential for:
+\begin{itemize}[itemsep=4pt]
+\item \textbf{Debugging} --- if a result looks wrong, the same inputs reproduce the same outputs.
+\item \textbf{Comparison} --- changes to the code can be evaluated against a fixed baseline.
+\item \textbf{Verification} --- others can run the code and confirm the published results.
+\end{itemize}
+
+The choice of seed value does not affect the statistical properties of the results --- different seeds produce different sequences, but the law of large numbers ensures the averages converge to the same true values regardless of seed.
+
+\subsection{CPU vs GPU random number generation}
+
+The CPU implementation uses NumPy's PCG64 generator, while the GPU implementation uses CuPy's XORWOW generator. These are different algorithms, so even with the same seed value, they produce different random sequences. The individual simulation paths therefore differ between CPU and GPU, but the \emph{statistical properties} of the outputs (means, percentiles, distribution shapes) should be equivalent.
+
+This equivalence is verified by the validation script, which runs both implementations with the same parameters and applies statistical tests (two-sample $t$-test, $F$-test for variance equality, and Kolmogorov--Smirnov test) to confirm that the output distributions are not significantly different.
+
+\begin{codelink}
+The CPU seed is set via \texttt{np.random.default\_rng(seed)}, producing a Generator object with the PCG64 algorithm. The GPU seed is set via \texttt{xp.random.seed(seed)}, which seeds CuPy's default XORWOW generator.
+\end{codelink}
+
+% ==============================================================
+\section{Summary of Design Decisions}
+% ==============================================================
+
+\begin{center}
+\begin{tabular}{@{}p{4.2cm}p{4cm}p{5.5cm}@{}}
+\toprule
+\textbf{Decision} & \textbf{Mathematical basis} & \textbf{Practical effect} \\
+\midrule
+Monte Carlo simulation & Law of large numbers & Avoids $2^{748}$ state enumeration \\[4pt]
+Two-stage sampling & Law of total probability & Fixed subset CDF; only within-subset probabilities change \\[4pt]
+Inverse CDF sampling & Probability integral transform & Efficient discrete sampling via cumulative sums \\[4pt]
+Equal redistribution & Probability preservation (Section 6) & Subset totals remain constant \\[4pt]
+Tier grouping & Identical-probability equivalence & Reduces 737 S3 items to 2 counters \\[4pt]
+Percentile reporting & Distribution-free estimation & Valid even when distribution is non-normal \\[4pt]
+Fixed random seed & PRNG determinism & Reproducible results across runs \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

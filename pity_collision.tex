@@ -1,0 +1,162 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{parskip}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+\title{\textbf{Pity Counter Collision Probability}\\[0.3em]
+\large A Markov Chain Analysis of Simultaneous Pity Events}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Overview}
+
+The loot system contains two independent pity mechanics. The S-tier pity counter forces an S-tier outcome after 80 consecutive non-S-tier rolls. The A-tier pity counter forces an A-tier outcome after 10 consecutive non-A-tier rolls. When both counters reach their maximum simultaneously, the system must resolve a collision. We derive the long-run probability of this event.
+
+\section{Model}
+
+\begin{definition}
+Let the \textbf{S-tier pity counter} be modelled as a discrete-time Markov chain with state space $\mathcal{S}_S = \{0, 1, 2, \ldots, 79\}$ and transition probabilities:
+\begin{align}
+P_S(i, 0)   &= p_S           &&\text{for } i \in \{0, 1, \ldots, 78\} \quad \text{(natural hit, reset)} \\
+P_S(i, i+1) &= 1 - p_S       &&\text{for } i \in \{0, 1, \ldots, 78\} \quad \text{(miss, advance)} \\
+P_S(79, 0)  &= 1             &&\text{(pity, forced reset)}
+\end{align}
+where $p_S = 0.005$.
+\end{definition}
+
+\begin{definition}
+Let the \textbf{A-tier pity counter} be modelled as a discrete-time Markov chain with state space $\mathcal{S}_A = \{0, 1, 2, \ldots, 9\}$ and identical transition structure with $p_A = 0.10$.
+\end{definition}
+
+The transition matrix for each chain has the form:
+\[
+\mathbf{P} = 
+\begin{pmatrix}
+p     & 1-p   & 0     & \cdots & 0     & 0     \\
+p     & 0     & 1-p   & \cdots & 0     & 0     \\
+p     & 0     & 0     & \cdots & 0     & 0     \\
+\vdots& \vdots& \vdots& \ddots & \vdots& \vdots\\
+p     & 0     & 0     & \cdots & 0     & 1-p   \\
+1     & 0     & 0     & \cdots & 0     & 0     
+\end{pmatrix}
+\]
+
+where each row sums to 1 and the final row reflects the forced pity reset.
+
+\section{Stationary Distribution}
+
+\begin{proposition}
+For a pity counter with natural hit probability $p$ and $n$ states $\{0, 1, \ldots, n-1\}$, the stationary distribution is:
+\[
+\pi(k) = \frac{(1-p)^k \cdot p}{1 - (1-p)^n} \qquad \text{for } k = 0, 1, \ldots, n-1
+\]
+\end{proposition}
+
+\begin{proof}
+State $k$ is reached only by $k$ consecutive misses from state 0, giving the relationship:
+\[
+\pi(k) = (1-p)^k \cdot \pi(0)
+\]
+
+Enumerating every state:
+\begin{alignat*}{2}
+\pi(0)   &= (1-p)^0 \cdot \pi(0)   &&= 1 \cdot \pi(0) \\
+\pi(1)   &= (1-p)^1 \cdot \pi(0)   && \\
+\pi(2)   &= (1-p)^2 \cdot \pi(0)   && \\
+         &\;\;\vdots                 && \\
+\pi(n-1) &= (1-p)^{n-1} \cdot \pi(0) &&
+\end{alignat*}
+
+Every state is now expressed in terms of the single unknown $\pi(0)$. To solve for it, we apply the normalisation constraint --- the probability of being in \emph{some} state must equal 1:
+\[
+\sum_{k=0}^{n-1} \pi(k) = 1
+\]
+
+Substituting each $\pi(k)$:
+\begin{align}
+\pi(0) + \pi(1) + \pi(2) + \cdots + \pi(n-1) &= 1 \notag \\[6pt]
+(1-p)^0 \cdot \pi(0) + (1-p)^1 \cdot \pi(0) + \cdots + (1-p)^{n-1} \cdot \pi(0) &= 1 \notag \\[6pt]
+\bigl((1-p)^0 + (1-p)^1 + \cdots + (1-p)^{n-1}\bigr) \cdot \pi(0) &= 1 \label{eq:factored}
+\end{align}
+
+The bracketed sum is a geometric series with first term $a = 1$, common ratio $r = (1-p)$, and $n$ terms:
+\[
+\sum_{k=0}^{n-1} (1-p)^k = \frac{1 - (1-p)^n}{1 - (1-p)} = \frac{1 - (1-p)^n}{p}
+\]
+
+Substituting this result back into equation~\eqref{eq:factored}:
+\[
+\frac{1 - (1-p)^n}{p} \cdot \pi(0) = 1
+\]
+
+Solving for $\pi(0)$:
+\[
+\pi(0) = \frac{p}{1 - (1-p)^n}
+\]
+
+Substituting back into $\pi(k) = (1-p)^k \cdot \pi(0)$:
+\[
+\pi(k) = \frac{(1-p)^k \cdot p}{1 - (1-p)^n}
+\]
+\end{proof}
+
+\section{Application}
+
+\subsection{S-tier pity state}
+
+For the S-tier chain ($p_S = 0.005$, $n = 80$), the probability of being in the maximum pity state is:
+\[
+\pi_S(79) = \frac{0.995^{79} \times 0.005}{1 - 0.995^{80}} = \frac{0.6730 \times 0.005}{1 - 0.6696} = \frac{0.003365}{0.3304} \approx 0.01018
+\]
+
+\subsection{A-tier pity state}
+
+For the A-tier chain ($p_A = 0.10$, $n = 10$):
+\[
+\pi_A(9) = \frac{0.9^{9} \times 0.1}{1 - 0.9^{10}} = \frac{0.3874 \times 0.1}{1 - 0.3487} = \frac{0.03874}{0.6513} \approx 0.05953
+\]
+
+\subsection{Collision probability}
+
+The two chains evolve independently: the S-tier counter's transitions do not depend on the A-tier counter's state, and vice versa. Therefore, by the multiplication rule for independent events:
+\[
+\boxed{P(\text{collision}) = \pi_S(79) \times \pi_A(9) = 0.01018 \times 0.05953 \approx 0.000606}
+\]
+
+This corresponds to approximately a $0.06\%$ chance on any given roll.
+
+\subsection{Expected collisions}
+
+Over $N$ rolls, the expected number of simultaneous pity events is approximately:
+\[
+\mathbb{E}[\text{collisions}] \approx N \cdot P(\text{collision})
+\]
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rc@{}}
+\toprule
+Rolls ($N$) & Expected collisions \\
+\midrule
+100   & 0.06 \\
+500   & 0.30 \\
+1000  & 0.61 \\
+2000  & 1.21 \\
+3000  & 1.82 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The collision is uncommon but not negligible at higher roll counts. The system resolves collisions by prioritising the rarer S-tier pity, deferring the A-tier pity to the immediately following roll.
+
+\end{document}

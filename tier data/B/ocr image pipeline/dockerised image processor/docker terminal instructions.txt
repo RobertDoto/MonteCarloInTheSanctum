@@ -1,0 +1,5 @@
+#1
+docker build -t ocr-app "C:\Users\PC\Desktop\sanctum probabilities\master\tier data\B\ocr image pipeline\dockerised image processor"
+
+#2
+docker run --gpus all -v "C:\Users\PC\Desktop\sanctum probabilities\master\tier data\B\ocr image pipeline\dockerised image processor:/app" -v "C:\Users\PC\Desktop\sanctum probabilities\master\tier data\B\images:/app/images" -v paddleocr-models:/root/.paddleocr ocr-app
