@@ -75,13 +75,14 @@ CHECKPOINTS = [10, 25, 50, 100, 250, 500, 1000]
 #  HELPER: find the median trigger roll from a probability curve
 # ==========================================================================
 
-def find_median_roll(prob_curve):
+def find_percentile_roll(prob_curve, percentile=0.50):
     """
     Given an array where prob_curve[i] is the fraction of simulations that
-    have triggered by roll i+1, find the first roll where >= 50% have triggered.
+    have triggered by roll i+1, find the first roll where >= percentile have
+    triggered. `percentile` is a fraction in [0, 1].
     """
     for i, p in enumerate(prob_curve):
-        if p >= 0.50:
+        if p >= percentile:
             return i + 1
     return len(prob_curve)
 
@@ -108,8 +109,8 @@ print(f"  {time.perf_counter() - t0:.2f}s\n")
 # Detect median trigger rolls from baseline to use as the fixed rolls.
 s1_probs = np.array(baseline["s1_transform_prob"])
 s2_probs = np.array(baseline["s2_complete_prob"])
-median_s1 = find_median_roll(s1_probs)
-median_s2 = find_median_roll(s2_probs)
+median_s1 = find_percentile_roll(s1_probs, 0.50)
+median_s2 = find_percentile_roll(s2_probs, 0.50)
 print(f"  Median S1 transform: roll {median_s1}")
 print(f"  Median S2 completion: roll {median_s2}\n")
 
@@ -334,6 +335,84 @@ print(f"when S1 is fixed, in that specific context.")
 
 
 # ==========================================================================
+#  INTERACTION EFFECTS (2^3 Factorial ANOVA Contrasts)
+# ==========================================================================
+#
+# With 3 binary factors (fix/free) and all 8 combinations, we can compute
+# the classic 2^3 factorial contrasts to isolate interaction effects.
+#
+# Main effect of fixing Si = mean(V when Si fixed) - mean(V when Si free)
+#   Negative means fixing reduces variance (expected).
+#
+# Two-way interaction S_i x S_j measures whether the variance reduction from
+# fixing S_i changes depending on whether S_j is also fixed:
+#   INT_ij = 0.25 * sum of (sign) * V_xyz  using the standard ANOVA contrast.
+#
+# Three-way interaction captures residual non-additivity.
+#
+# Key property: all interaction contrasts sum to zero by construction in a
+# balanced 2^3 factorial.
+
+# Main effects (average variance reduction from fixing each source)
+ME_S1 = 0.25 * ((V_100 - V_000) + (V_110 - V_010) + (V_101 - V_001) + (V_111 - V_011))
+ME_S2 = 0.25 * ((V_010 - V_000) + (V_110 - V_100) + (V_011 - V_001) + (V_111 - V_101))
+ME_S3 = 0.25 * ((V_001 - V_000) + (V_101 - V_100) + (V_011 - V_010) + (V_111 - V_110))
+
+# Two-way interactions
+# INT_S1S2: does fixing S1 reduce MORE variance when S2 is also fixed?
+#   = 0.25 * [(V_110 - V_010) - (V_100 - V_000) + (V_111 - V_011) - (V_101 - V_001)]
+INT_S1S2 = 0.25 * ((V_000 - V_100 - V_010 + V_110) + (V_001 - V_101 - V_011 + V_111))
+INT_S1S3 = 0.25 * ((V_000 - V_100 - V_001 + V_101) + (V_010 - V_110 - V_011 + V_111))
+INT_S2S3 = 0.25 * ((V_000 - V_010 - V_001 + V_011) + (V_100 - V_110 - V_101 + V_111))
+
+# Three-way interaction
+INT_S1S2S3 = 0.125 * (
+    V_000 - V_100 - V_010 - V_001 + V_110 + V_101 + V_011 - V_111
+)
+
+# --- Print interaction table ---
+print(f"\n\n{'=' * 70}")
+print("INTERACTION EFFECTS (2^3 FACTORIAL ANOVA CONTRASTS)")
+print("=" * 70)
+print("Main effects are average variance change from fixing a source.")
+print("Interactions show whether sources amplify (+) or are redundant (-)")
+print("with each other.\n")
+
+print(f"{'Roll':<7}{'ME(S1)':>10}{'ME(S2)':>10}{'ME(S3)':>10}"
+      f"{'S1xS2':>10}{'S1xS3':>10}{'S2xS3':>10}{'S1xS2xS3':>10}")
+print("-" * 77)
+
+for cp in CHECKPOINTS:
+    idx = cp - 1
+    print(f"{cp:<7}{ME_S1[idx]:>10.0f}{ME_S2[idx]:>10.0f}{ME_S3[idx]:>10.0f}"
+          f"{INT_S1S2[idx]:>10.0f}{INT_S1S3[idx]:>10.0f}{INT_S2S3[idx]:>10.0f}"
+          f"{INT_S1S2S3[idx]:>10.0f}")
+
+# Also show as % of total variance for interpretability
+print(f"\nAs percentage of baseline variance:\n")
+print(f"{'Roll':<7}{'ME(S1)':>10}{'ME(S2)':>10}{'ME(S3)':>10}"
+      f"{'S1xS2':>10}{'S1xS3':>10}{'S2xS3':>10}{'S1xS2xS3':>10}")
+print("-" * 77)
+
+for cp in CHECKPOINTS:
+    idx = cp - 1
+    vt = V_000[idx]
+    if vt > 0:
+        print(f"{cp:<7}{ME_S1[idx]/vt*100:>9.1f}%{ME_S2[idx]/vt*100:>9.1f}%"
+              f"{ME_S3[idx]/vt*100:>9.1f}%{INT_S1S2[idx]/vt*100:>9.1f}%"
+              f"{INT_S1S3[idx]/vt*100:>9.1f}%{INT_S2S3[idx]/vt*100:>9.1f}%"
+              f"{INT_S1S2S3[idx]/vt*100:>9.1f}%")
+    else:
+        print(f"{cp:<7}{'0.0%':>10}{'0.0%':>10}{'0.0%':>10}"
+              f"{'0.0%':>10}{'0.0%':>10}{'0.0%':>10}{'0.0%':>10}")
+
+print(f"\nNegative main effects = fixing that source reduces variance (expected).")
+print(f"Positive interaction = sources amplify each other's variance.")
+print(f"Negative interaction = sources are redundant (fixing both helps less")
+print(f"than the sum of fixing each alone).")
+
+
+# ==========================================================================
 #  PLOT 1: Percentage Contributions Over All Rolls (stacked area)
 # ==========================================================================
 
@@ -477,6 +556,225 @@ ax.set_ylim(0, 105)
 fig.tight_layout()
 fig.savefig(os.path.join(OUTPUT_PATH, "variance_early_detail.png"), dpi=150)
 print(f"Saved: variance_early_detail.png")
+plt.close()
+
+
+# ==========================================================================
+#  PLOT 4: Interaction Effects Over All Rolls
+# ==========================================================================
+
+fig, (ax_top, ax_bot) = plt.subplots(2, 1, figsize=(14, 10))
+
+# --- Top: two-way interactions as % of baseline variance ---
+with np.errstate(divide='ignore', invalid='ignore'):
+    pct_int12 = np.where(V_000 > 0, INT_S1S2 / V_000 * 100, 0)
+    pct_int13 = np.where(V_000 > 0, INT_S1S3 / V_000 * 100, 0)
+    pct_int23 = np.where(V_000 > 0, INT_S2S3 / V_000 * 100, 0)
+    pct_int123 = np.where(V_000 > 0, INT_S1S2S3 / V_000 * 100, 0)
+
+# Smooth for readability
+pct_int12_s = smooth(pct_int12, window)
+pct_int13_s = smooth(pct_int13, window)
+pct_int23_s = smooth(pct_int23, window)
+pct_int123_s = smooth(pct_int123, window)
+
+ax_top.plot(rolls_smooth, pct_int12_s, color="#ea580c", linewidth=2, label="S1 × S2")
+ax_top.plot(rolls_smooth, pct_int13_s, color="#0891b2", linewidth=2, label="S1 × S3")
+ax_top.plot(rolls_smooth, pct_int23_s, color="#be185d", linewidth=2, label="S2 × S3")
+ax_top.plot(rolls_smooth, pct_int123_s, color="#6b7280", linewidth=1.5,
+            linestyle="--", label="S1 × S2 × S3")
+ax_top.axhline(y=0, color="gray", linestyle="-", alpha=0.3, linewidth=1)
+
+ax_top.set_xlabel("Roll Number", fontsize=12)
+ax_top.set_ylabel("% of Baseline Variance", fontsize=12)
+ax_top.set_title("Interaction Effects: Do Sources Amplify or Cancel Each Other?",
+                 fontsize=14, fontweight="bold")
+ax_top.legend(loc="best", fontsize=10)
+ax_top.set_xlim(0, MAX_ROLLS)
+
+# --- Bottom: absolute interaction magnitudes ---
+ax_bot.plot(rolls, np.abs(INT_S1S2), color="#ea580c", linewidth=1.5, alpha=0.7, label="|S1 × S2|")
+ax_bot.plot(rolls, np.abs(INT_S1S3), color="#0891b2", linewidth=1.5, alpha=0.7, label="|S1 × S3|")
+ax_bot.plot(rolls, np.abs(INT_S2S3), color="#be185d", linewidth=1.5, alpha=0.7, label="|S2 × S3|")
+ax_bot.plot(rolls, V_explained, color="#2563eb", linewidth=2, linestyle=":", alpha=0.5,
+            label="Total explained var")
+
+ax_bot.set_xlabel("Roll Number", fontsize=12)
+ax_bot.set_ylabel("Variance (points²)", fontsize=12)
+ax_bot.set_title("Interaction Magnitudes vs Total Explained Variance",
+                 fontsize=14, fontweight="bold")
+ax_bot.legend(loc="upper left", fontsize=10)
+ax_bot.set_xlim(0, MAX_ROLLS)
+ax_bot.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{x:,.0f}"))
+
+fig.tight_layout()
+fig.savefig(os.path.join(OUTPUT_PATH, "variance_interactions.png"), dpi=150)
+print(f"Saved: variance_interactions.png")
+plt.close()
+
+
+# ==========================================================================
+#  SENSITIVITY ANALYSIS: Sweep S1/S2 fix-points across percentiles
+# ==========================================================================
+#
+# The baseline decomposition fixes S1 and S2 at their median (p50) trigger
+# rolls. Here we repeat the Shapley calculation with fix-points at the 25th
+# and 75th percentiles to test robustness.
+#
+# Key optimisation: when varying only S1's fix-point, the 4 runs that do NOT
+# fix S1 (runs 0, 2, 3, 6) are unchanged. Only the 4 runs involving S1
+# (runs 1, 4, 5, 7) need re-running. Same logic applies for S2.
+
+print(f"\n\n{'=' * 70}")
+print("SENSITIVITY ANALYSIS: Varying Fix-Point Percentiles")
+print("=" * 70)
+
+# Detect p25 and p75 trigger rolls from baseline probability curves.
+p25_s1 = find_percentile_roll(s1_probs, 0.25)
+p75_s1 = find_percentile_roll(s1_probs, 0.75)
+p25_s2 = find_percentile_roll(s2_probs, 0.25)
+p75_s2 = find_percentile_roll(s2_probs, 0.75)
+
+print(f"  S1 trigger rolls:  p25={p25_s1}  p50={median_s1}  p75={p75_s1}")
+print(f"  S2 trigger rolls:  p25={p25_s2}  p50={median_s2}  p75={p75_s2}\n")
+
+# Helper: compute Shapley values from 8 variance arrays
+def compute_shapley(v000, v100, v010, v001, v110, v101, v011, v111):
+    w0, w1, w2 = 1/3, 1/6, 1/3
+    s1 = w0*(v000-v100) + w1*(v010-v110) + w1*(v001-v101) + w2*(v011-v111)
+    s2 = w0*(v000-v010) + w1*(v100-v110) + w1*(v001-v011) + w2*(v101-v111)
+    s3 = w0*(v000-v001) + w1*(v100-v101) + w1*(v010-v011) + w2*(v110-v111)
+    return s1, s2, s3
+
+# Helper: run a single simulation with given fix params and return variance array
+def run_and_get_var(label, fix_s1=None, fix_s2=None, fix_s3_flag=False):
+    print(f"  {label} ...", end=" ", flush=True)
+    t = time.perf_counter()
+    res = simulate(config, MAX_ROLLS, simulations=SIMULATIONS, seed=SEED,
+                   use_gpu=use_gpu, dist_checkpoints=CHECKPOINTS,
+                   fix_s1_at_roll=fix_s1, fix_s2_at_roll=fix_s2, fix_s3=fix_s3_flag)
+    print(f"{time.perf_counter() - t:.2f}s")
+    return np.array(res["cumulative_std"]) ** 2
+
+# Build a cache of already-computed runs to avoid redundant simulations.
+# Key: (s1_fix_roll or None, s2_fix_roll or None, fix_s3 bool)
+run_cache = {
+    (None,      None,      False): V_000,
+    (median_s1, None,      False): V_100,
+    (None,      median_s2, False): V_010,
+    (None,      None,      True):  V_001,
+    (median_s1, median_s2, False): V_110,
+    (median_s1, None,      True):  V_101,
+    (None,      median_s2, True):  V_011,
+    (median_s1, median_s2, True):  V_111,
+}
+
+def get_or_run(s1_fix, s2_fix, s3_flag):
+    key = (s1_fix, s2_fix, s3_flag)
+    if key not in run_cache:
+        parts = []
+        if s1_fix is not None: parts.append(f"S1@{s1_fix}")
+        if s2_fix is not None: parts.append(f"S2@{s2_fix}")
+        if s3_flag: parts.append("S3")
+        label = "Fix " + "+".join(parts) if parts else "Baseline"
+        run_cache[key] = run_and_get_var(label, fix_s1=s1_fix, fix_s2=s2_fix,
+                                         fix_s3_flag=s3_flag)
+    return run_cache[key]
+
+# Run the full Shapley decomposition for each (s1_pct, s2_pct) combo.
+s1_fixpoints = [("p25", p25_s1), ("p50", median_s1), ("p75", p75_s1)]
+s2_fixpoints = [("p25", p25_s2), ("p50", median_s2), ("p75", p75_s2)]
+
+# Store results: dict mapping (s1_label, s2_label) -> (shap_s1, shap_s2, shap_s3)
+sensitivity_results = {}
+
+print("Running sensitivity sweep (reusing cached simulations where possible):\n")
+
+for s1_label, s1_roll in s1_fixpoints:
+    for s2_label, s2_roll in s2_fixpoints:
+        v000 = get_or_run(None,    None,    False)
+        v100 = get_or_run(s1_roll, None,    False)
+        v010 = get_or_run(None,    s2_roll, False)
+        v001 = get_or_run(None,    None,    True)
+        v110 = get_or_run(s1_roll, s2_roll, False)
+        v101 = get_or_run(s1_roll, None,    True)
+        v011 = get_or_run(None,    s2_roll, True)
+        v111 = get_or_run(s1_roll, s2_roll, True)
+
+        sh1, sh2, sh3 = compute_shapley(v000, v100, v010, v001, v110, v101, v011, v111)
+        sensitivity_results[(s1_label, s2_label)] = (sh1, sh2, sh3, v000 - v111)
+
+print()
+
+# --- Print sensitivity table at key checkpoints ---
+print(f"{'=' * 70}")
+print("SENSITIVITY: Shapley % at Checkpoints by Fix-Point Choice")
+print("=" * 70)
+
+for cp in CHECKPOINTS:
+    idx = cp - 1
+    print(f"\n  Roll {cp}:")
+    print(f"  {'S1 fix':>8} {'S2 fix':>8} {'%S1':>8} {'%S2':>8} {'%S3':>8} {'V_expl':>10}")
+    print(f"  {'-'*54}")
+
+    for s1_label, s1_roll in s1_fixpoints:
+        for s2_label, s2_roll in s2_fixpoints:
+            sh1, sh2, sh3, ve = sensitivity_results[(s1_label, s2_label)]
+            if ve[idx] > 0:
+                p1 = sh1[idx] / ve[idx] * 100
+                p2 = sh2[idx] / ve[idx] * 100
+                p3 = sh3[idx] / ve[idx] * 100
+            else:
+                p1 = p2 = p3 = 0.0
+            print(f"  {s1_label+' r'+str(s1_roll):>8} {s2_label+' r'+str(s2_roll):>8}"
+                  f" {p1:>7.1f}% {p2:>7.1f}% {p3:>7.1f}% {ve[idx]:>10.0f}")
+
+
+# ==========================================================================
+#  PLOT 5: Sensitivity -- Shapley % across fix-point choices
+# ==========================================================================
+
+fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=True)
+
+# For each checkpoint in a reduced set, show grouped bars.
+sens_checkpoints = [cp for cp in [50, 250, 1000] if cp <= MAX_ROLLS]
+combo_labels = [f"S1={s1l}\nS2={s2l}"
+                for s1l, _ in s1_fixpoints for s2l, _ in s2_fixpoints]
+x = np.arange(len(combo_labels))
+bar_w = 0.25
+
+for ax_i, cp in enumerate(sens_checkpoints):
+    idx = cp - 1
+    vals_s1, vals_s2, vals_s3 = [], [], []
+
+    for s1_label, _ in s1_fixpoints:
+        for s2_label, _ in s2_fixpoints:
+            sh1, sh2, sh3, ve = sensitivity_results[(s1_label, s2_label)]
+            if ve[idx] > 0:
+                vals_s1.append(sh1[idx] / ve[idx] * 100)
+                vals_s2.append(sh2[idx] / ve[idx] * 100)
+                vals_s3.append(sh3[idx] / ve[idx] * 100)
+            else:
+                vals_s1.append(0); vals_s2.append(0); vals_s3.append(0)
+
+    axes[ax_i].bar(x - bar_w, vals_s1, bar_w, color="#f59e0b", label="S1 timing")
+    axes[ax_i].bar(x,         vals_s2, bar_w, color="#10b981", label="S2 timing")
+    axes[ax_i].bar(x + bar_w, vals_s3, bar_w, color="#8b5cf6", label="S3 selection")
+
+    axes[ax_i].set_title(f"Roll {cp}", fontsize=13, fontweight="bold")
+    axes[ax_i].set_xticks(x)
+    axes[ax_i].set_xticklabels(combo_labels, fontsize=8)
+    axes[ax_i].set_ylim(0, 105)
+    if ax_i == 0:
+        axes[ax_i].set_ylabel("% of Explained Variance", fontsize=12)
+    if ax_i == 1:
+        axes[ax_i].legend(loc="upper center", fontsize=10)
+
+fig.suptitle("Sensitivity: Shapley Decomposition Across Fix-Point Choices",
+             fontsize=14, fontweight="bold")
+fig.tight_layout()
+fig.savefig(os.path.join(OUTPUT_PATH, "variance_sensitivity.png"), dpi=150)
+print(f"\nSaved: variance_sensitivity.png")
 plt.close()
 
 
