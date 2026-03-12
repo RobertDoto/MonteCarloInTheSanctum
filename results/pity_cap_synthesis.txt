@@ -1,0 +1,371 @@
+GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
+  Using GPU (CuPy) backend.
+
+======================================================================
+[Baseline] Pity cap: 10 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  23.57s
+  Median S1 trigger: roll 10
+
+======================================================================
+[Baseline] Pity cap: 20 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  24.20s
+  Median S1 trigger: roll 20
+
+======================================================================
+[Baseline] Pity cap: 30 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  20.54s
+  Median S1 trigger: roll 30
+
+======================================================================
+[Baseline] Pity cap: 40 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  19.89s
+  Median S1 trigger: roll 40
+
+======================================================================
+[Baseline] Pity cap: 50 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  19.67s
+  Median S1 trigger: roll 50
+
+======================================================================
+[Baseline] Pity cap: 60 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  23.37s
+  Median S1 trigger: roll 60
+
+======================================================================
+[Baseline] Pity cap: 70 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  24.40s
+  Median S1 trigger: roll 70
+
+======================================================================
+[Baseline] Pity cap: 80 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  25.34s
+  Median S1 trigger: roll 80
+
+======================================================================
+[Fix-S1 @ r10] Pity cap: 10 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  22.25s
+
+======================================================================
+[Fix-S1 @ r20] Pity cap: 20 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  18.71s
+
+======================================================================
+[Fix-S1 @ r30] Pity cap: 30 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  17.59s
+
+======================================================================
+[Fix-S1 @ r40] Pity cap: 40 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  21.00s
+
+======================================================================
+[Fix-S1 @ r50] Pity cap: 50 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  25.42s
+
+======================================================================
+[Fix-S1 @ r60] Pity cap: 60 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  23.21s
+
+======================================================================
+[Fix-S1 @ r70] Pity cap: 70 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  20.75s
+
+======================================================================
+[Fix-S1 @ r80] Pity cap: 80 rolls
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  20.95s
+
+
+
+======================================================================
+UNCERTAINTY WINDOW: Roll Range Where S1 Timing Drives >30% of Variance
+======================================================================
+
+     Cap   Med S1    Start      End    Width  Peak roll   Peak %
+  ------------------------------------------------------------
+      10       10       --       --        0         --   14.6%
+      20       20       18       23        6         20   35.1%
+      30       30       18       37       20         30   49.6%
+      40       40       18       49       32         40   58.3%
+      50       50       18       60       43         50   64.3%
+      60       60       18       72       55         60   66.2%
+      70       70       18       83       66         58   66.1%
+      80       80       18       96       79         58   66.1%
+
+  'Width' = number of rolls where S1 timing accounts for >30%
+  of total outcome variance. This is the anxious zone.
+
+
+======================================================================
+SPENDING PRESSURE: Anxious Rolls Before Reaching Point Targets
+======================================================================
+How many rolls does a player spend inside the high-uncertainty zone
+before their median cumulative points reach each target?
+
+     Cap       Window     50 pts    100 pts    150 pts
+  --------------------------------------------------
+      10           --         0         0         0
+      20       r18-23         0         6         6
+      30       r18-37         0         8        20
+      40       r18-49         0         8        21
+      50       r18-60         0         8        21
+      60       r18-72         0         8        21
+      70       r18-83         0         8        21
+      80       r18-96         0         8        21
+
+
+======================================================================
+MARGINAL IMPACT: Extra Anxious Rolls per 10-Roll Cap Increase
+======================================================================
+Each row shows the additional uncertainty-window rolls gained by
+increasing the pity cap by 10 rolls.
+
+        Change  Old width  New width    Delta  Extra mean pts lost
+  ----------------------------------------------------------------
+        10->20          0          6       +6              +268.3
+        20->30          6         20      +14               +23.1
+        30->40         20         32      +12               +21.8
+        40->50         32         43      +11               +20.8
+        50->60         43         55      +12               +19.8
+        60->70         55         66      +11               +18.8
+        70->80         66         79      +13               +18.1
+
+
+======================================================================
+RP PRICING: Real-World Cost of Rolling
+======================================================================
+  Each roll costs 400 RP.
+
+     Package      GBP     GBP/RP    Rolls   GBP/roll
+  --------------------------------------------------
+       575 RP    4.49    0.0078      1.4      3.12
+      1450 RP   10.99    0.0076      3.6      3.03
+      2850 RP   20.99    0.0074      7.1      2.95
+      5000 RP   34.99    0.0070     12.5      2.80
+      7250 RP   49.99    0.0069     18.1      2.76
+     15000 RP   99.99    0.0067     37.5      2.67
+
+  Best value:  2.67/roll (largest package)
+  Worst value: 3.12/roll (smallest package)
+
+
+======================================================================
+COST TO TARGET: GBP to Reach Point Milestones by Pity Cap
+======================================================================
+  Based on best-value pricing (2.67/roll).
+
+     Cap     50 pts    100 pts    150 pts    Pity cost
+  ------------------------------------------------
+      10     37.33     53.33     53.33       26.66
+      20     34.66     69.33    101.32       53.33
+      30     34.66     66.66    101.32       79.99
+      40     34.66     66.66    101.32      106.66
+      50     34.66     66.66    101.32      133.32
+      60     34.66     66.66    101.32      159.98
+      70     34.66     66.66    101.32      186.65
+      80     34.66     66.66    101.32      213.31
+
+
+======================================================================
+MARGINAL SPEND: Extra GBP per 10-Roll Cap Increase
+======================================================================
+If a player is persuaded to roll through the entire uncertainty window,
+how much extra do they spend for each 10-roll cap increase?
+
+        Change  Extra rolls    Best case   Worst case
+  ----------------------------------------------------
+        10->20           +6       16.00       18.74
+        20->30          +14       37.33       43.73
+        30->40          +12       32.00       37.48
+        40->50          +11       29.33       34.36
+        50->60          +12       32.00       37.48
+        60->70          +11       29.33       34.36
+        70->80          +13       34.66       40.61
+
+  Total extra anxious rolls (cap 10->80): 79
+  Total extra spend (best):  210.65
+  Total extra spend (worst): 246.75
+
+
+======================================================================
+SYNTHESIS: THE DISCRETE GOALPOST WIDENING EFFECT
+======================================================================
+
+  CRITICAL CONTEXT: A typical player stops around 150 expected points,
+  which is reached at approximately roll 38 (cap=80) or roll 20
+  (cap=10). The S1 pity cap at roll 80 is FAR BEYOND this natural
+  stopping point.
+
+  THE MONETISATION REALITY:
+
+  At 400 RP per roll and best-value pricing (2.67/roll):
+    - Reaching 150 pts (roll ~38):  ~101.32
+    - Reaching the pity cap (roll 80):   ~213.31
+    - Gap (the sunk-cost trap):       ~111.99
+
+  A player at 150 points has spent ~101.32. The pity guarantee
+  is another ~111.99 away. This gap is the monetisation sweet
+  spot: large enough to extract significant additional spend, but framed as
+  "finishing what you started" rather than a new purchase.
+
+  At the typical stopping roll (38) with cap=80, only 16.5% of
+  players have triggered S1. The remaining 83.5% leave without ever
+  experiencing the pity guarantee. The cap exists not as a practical
+  mechanic but as a psychological anchor.
+
+  THE UNCERTAINTY WINDOW AND SPENDING PRESSURE:
+
+  At cap=10:  The uncertainty window is 0 rolls wide.
+  At cap=80:  The uncertainty window is 79 rolls wide.
+
+  This is a 79-roll expansion of the anxious zone. But the key
+  insight is that this window overlaps almost perfectly with the typical
+  player's entire session (rolls 1-38). The player spends their
+  ENTIRE experience inside the zone of maximum outcome uncertainty.
+
+  The pity cap at 80 rolls serves three psychological functions:
+
+  1. SUNK COST ANCHOR: "I'm already 38 rolls in, and the guarantee is at
+     80. I'm 42 rolls away from a sure thing." This reframes
+     stopping as a loss rather than a natural endpoint. The gap represents
+     ~111.99 of additional spend at best-value pricing,
+     or ~131.19 at worst-value.
+
+  2. NEAR-MISS FRAMING: With only 16.5% triggering S1 by the typical
+     stop, most players feel they "almost" got lucky. A lower cap would
+     resolve this uncertainty earlier, reducing the emotional hook.
+
+  3. DISCRETE INVISIBILITY: Each 10-roll cap increase adds only a modest
+     number of anxious rolls (see marginal table above). No single change
+     feels dramatic, but the cumulative effect from cap=10 to cap=80
+     is substantial -- 79 extra anxious rolls worth
+     210.65-246.75 in potential spend.
+
+  The interaction effects from the variance decomposition confirm that S1
+  timing acts nearly independently of S2 and S3 (all interactions <1.5% of
+  baseline variance). This means the pity cap is a clean, isolated lever --
+  adjusting it does not create unpredictable knock-on effects. It is a
+  precision tool for tuning spending pressure.
+
+  Key checkpoints (cap=80 vs cap=10):
+    Roll   10: cap=10 gives     -2.6 more mean points ( -6.1% vs cap=80)
+    Roll   20: cap=10 gives   +261.8 more mean points (+309.3% vs cap=80)
+    Roll   30: cap=10 gives   +526.4 more mean points (+413.3% vs cap=80)
+    Roll   50: cap=10 gives  +1054.5 more mean points (+488.7% vs cap=80)
+    Roll   80: cap=10 gives  +1835.1 more mean points (+442.4% vs cap=80)
+
+Saved: synthesis_variance_share.png
+Saved: synthesis_combined.png
+Saved: synthesis_marginal_anxious.png
+
+Done!

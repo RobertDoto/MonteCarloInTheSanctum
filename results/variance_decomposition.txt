@@ -1,0 +1,399 @@
+GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
+  Using GPU (CuPy) backend.
+
+======================================================================
+Run 0/7: Baseline (nothing fixed)
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  19.59s
+
+  Median S1 transform: roll 80
+  Median S2 completion: roll 65
+
+======================================================================
+Run 1/7: Fix S1 at roll 80
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  18.94s
+
+======================================================================
+Run 2/7: Fix S2 at roll 65
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  19.91s
+
+======================================================================
+Run 3/7: Fix S3 (shared draws)
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  19.00s
+
+======================================================================
+Run 4/7: Fix S1 + S2
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  21.50s
+
+======================================================================
+Run 5/7: Fix S1 + S3
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  17.98s
+
+======================================================================
+Run 6/7: Fix S2 + S3
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  21.68s
+
+======================================================================
+Run 7/7: Fix everything
+======================================================================
+  Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+  18.83s
+
+======================================================================
+VERIFICATION
+======================================================================
+  Max deviation of Shapley sum from V_explained: 0.000000
+  Decomposition sums correctly (deviation < 1 variance point).
+
+
+======================================================================
+SHAPLEY VARIANCE DECOMPOSITION
+======================================================================
+S1 fixed at roll 80 (baseline median transform roll)
+S2 fixed at roll 65 (baseline median completion roll)
+S3 fixed via shared random draws
+
+Roll        V_total  V_residual   S1 timing   S2 timing   S3 select    %S1    %S2    %S3   %Sum
+---------------------------------------------------------------------------------------------------
+10              253          27          64           0         162  28.4%   0.0%  71.6% 100.0%
+25              952          46         464           5         437  51.2%   0.6%  48.2% 100.0%
+50             2903          97        1932          12         861  68.9%   0.4%  30.7% 100.0%
+100           20951       11911        5029        2339        1672  55.6%  25.9%  18.5% 100.0%
+250           44774       32624        5796        2164        4190  47.7%  17.8%  34.5% 100.0%
+500           97517       81123        6265        1644        8485  38.2%  10.0%  51.8% 100.0%
+1000         193715      173695        6530       -1100       14590  32.6%  -5.5%  72.9% 100.0%
+
+V_total = total variance (baseline). V_residual = variance with everything
+fixed (noise from subset selection randomness that cannot be attributed).
+Percentages are of explained variance (V_total - V_residual).
+
+
+======================================================================
+DETAILED: S1 MARGINAL CONTRIBUTIONS BY CONTEXT
+======================================================================
+Roll      S2f S3f   S2x S3f   S2f S3x   S2x S3x   Average
+---------------------------------------------------------
+10             62        62        67        67        64
+25            469       467       473       454       466
+50           1912      1973      1951      1921      1940
+100          4895      5089      5015      5140      5035
+250          5627      5836      5768      5959      5797
+500          6063      6370      6188      6454      6269
+1000         6352      6629      6365      6740      6522
+
+f = free (random), x = fixed. Each column shows how much variance drops
+when S1 is fixed, in that specific context.
+
+
+======================================================================
+INTERACTION EFFECTS (2^3 FACTORIAL ANOVA CONTRASTS)
+======================================================================
+Main effects are average variance change from fixing a source.
+Interactions show whether sources amplify (+) or are redundant (-)
+with each other.
+
+Roll       ME(S1)    ME(S2)    ME(S3)     S1xS2     S1xS3     S2xS3  S1xS2xS3
+-----------------------------------------------------------------------------
+10            -64         0      -162        -0        -2         0         0
+25           -466        -7      -438         6         2        -5        -2
+50          -1940       -20      -869        -8         3       -17       -11
+100         -5035     -2345     -1678       -80       -43       -77        -8
+250         -5797     -2165     -4192      -100       -66       157        -2
+500         -6269     -1648     -8488      -144       -52       121        -5
+1000        -6522      1108    -14581      -163       -31      2921        12
+
+As percentage of baseline variance:
+
+Roll       ME(S1)    ME(S2)    ME(S3)     S1xS2     S1xS3     S2xS3  S1xS2xS3
+-----------------------------------------------------------------------------
+10         -25.3%      0.0%    -64.0%     -0.0%     -1.0%      0.0%      0.0%
+25         -48.9%     -0.7%    -46.0%      0.6%      0.2%     -0.6%     -0.2%
+50         -66.8%     -0.7%    -29.9%     -0.3%      0.1%     -0.6%     -0.4%
+100        -24.0%    -11.2%     -8.0%     -0.4%     -0.2%     -0.4%     -0.0%
+250        -12.9%     -4.8%     -9.4%     -0.2%     -0.1%      0.4%     -0.0%
+500         -6.4%     -1.7%     -8.7%     -0.1%     -0.1%      0.1%     -0.0%
+1000        -3.4%      0.6%     -7.5%     -0.1%     -0.0%      1.5%      0.0%
+
+Negative main effects = fixing that source reduces variance (expected).
+Positive interaction = sources amplify each other's variance.
+Negative interaction = sources are redundant (fixing both helps less
+than the sum of fixing each alone).
+
+Saved: variance_decomposition.png
+Saved: variance_std_comparison.png
+Saved: variance_early_detail.png
+Saved: variance_interactions.png
+
+
+======================================================================
+SENSITIVITY ANALYSIS: Varying Fix-Point Percentiles
+======================================================================
+  S1 trigger rolls:  p25=61  p50=80  p75=80
+  S2 trigger rolls:  p25=58  p50=65  p75=73
+
+Running sensitivity sweep (reusing cached simulations where possible):
+
+  Fix S1@61 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+19.94s
+  Fix S2@58 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.31s
+  Fix S1@61+S2@58 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+22.40s
+  Fix S1@61+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+19.06s
+  Fix S2@58+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+19.92s
+  Fix S1@61+S2@58+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.07s
+  Fix S1@61+S2@65 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+22.14s
+  Fix S1@61+S2@65+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.92s
+  Fix S2@73 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.11s
+  Fix S1@61+S2@73 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+23.05s
+  Fix S2@73+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+19.70s
+  Fix S1@61+S2@73+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.74s
+  Fix S1@80+S2@58 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+19.64s
+  Fix S1@80+S2@58+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+20.29s
+  Fix S1@80+S2@73 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+21.08s
+  Fix S1@80+S2@73+S3 ...   Backend: CuPy (GPU)
+  Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
+  Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
+  Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
+  Roll 500/1000...
+  Roll 1000/1000...
+17.97s
+
+======================================================================
+SENSITIVITY: Shapley % at Checkpoints by Fix-Point Choice
+======================================================================
+
+  Roll 10:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    28.4%     0.0%    71.6%        226
+   p25 r61  p50 r65    28.4%     0.0%    71.6%        226
+   p25 r61  p75 r73    28.4%     0.0%    71.6%        226
+   p50 r80  p25 r58    28.4%     0.0%    71.6%        226
+   p50 r80  p50 r65    28.4%     0.0%    71.6%        226
+   p50 r80  p75 r73    28.4%     0.0%    71.6%        226
+   p75 r80  p25 r58    28.4%     0.0%    71.6%        226
+   p75 r80  p50 r65    28.4%     0.0%    71.6%        226
+   p75 r80  p75 r73    28.4%     0.0%    71.6%        226
+
+  Roll 25:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    51.2%     0.6%    48.2%        907
+   p25 r61  p50 r65    51.2%     0.6%    48.2%        907
+   p25 r61  p75 r73    51.2%     0.6%    48.2%        907
+   p50 r80  p25 r58    51.2%     0.6%    48.2%        907
+   p50 r80  p50 r65    51.2%     0.6%    48.2%        907
+   p50 r80  p75 r73    51.2%     0.6%    48.2%        907
+   p75 r80  p25 r58    51.2%     0.6%    48.2%        907
+   p75 r80  p50 r65    51.2%     0.6%    48.2%        907
+   p75 r80  p75 r73    51.2%     0.6%    48.2%        907
+
+  Roll 50:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    68.9%     0.4%    30.7%       2805
+   p25 r61  p50 r65    68.9%     0.4%    30.7%       2805
+   p25 r61  p75 r73    68.9%     0.4%    30.7%       2805
+   p50 r80  p25 r58    68.9%     0.4%    30.7%       2805
+   p50 r80  p50 r65    68.9%     0.4%    30.7%       2805
+   p50 r80  p75 r73    68.9%     0.4%    30.7%       2805
+   p75 r80  p25 r58    68.9%     0.4%    30.7%       2805
+   p75 r80  p50 r65    68.9%     0.4%    30.7%       2805
+   p75 r80  p75 r73    68.9%     0.4%    30.7%       2805
+
+  Roll 100:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58   -39.6%    78.3%    61.3%       2643
+   p25 r61  p50 r65   -33.6%    78.5%    55.1%       3074
+   p25 r61  p75 r73   -33.0%    82.9%    50.1%       3167
+   p50 r80  p25 r58    58.0%    23.0%    18.9%       8638
+   p50 r80  p50 r65    55.6%    25.9%    18.5%       9041
+   p50 r80  p75 r73    54.8%    27.8%    17.4%       9143
+   p75 r80  p25 r58    58.0%    23.0%    18.9%       8638
+   p75 r80  p50 r65    55.6%    25.9%    18.5%       9041
+   p75 r80  p75 r73    54.8%    27.8%    17.4%       9143
+
+  Roll 250:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    19.3%    26.2%    54.6%       7796
+   p25 r61  p50 r65    19.7%    28.3%    52.0%       8166
+   p25 r61  p75 r73    17.5%    31.4%    51.1%       7977
+   p50 r80  p25 r58    48.0%    16.3%    35.7%      11967
+   p50 r80  p50 r65    47.7%    17.8%    34.5%      12150
+   p50 r80  p75 r73    46.4%    20.3%    33.4%      12404
+   p75 r80  p25 r58    48.0%    16.3%    35.7%      11967
+   p75 r80  p50 r65    47.7%    17.8%    34.5%      12150
+   p75 r80  p75 r73    46.4%    20.3%    33.4%      12404
+
+  Roll 500:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    36.0%    12.4%    51.6%      15685
+   p25 r61  p50 r65    35.8%    11.4%    52.8%      16182
+   p25 r61  p75 r73    34.0%    14.5%    51.5%      16367
+   p50 r80  p25 r58    38.3%    11.2%    50.5%      16139
+   p50 r80  p50 r65    38.2%    10.0%    51.8%      16394
+   p50 r80  p75 r73    36.2%    13.7%    50.1%      17112
+   p75 r80  p25 r58    38.3%    11.2%    50.5%      16139
+   p75 r80  p50 r65    38.2%    10.0%    51.8%      16394
+   p75 r80  p75 r73    36.2%    13.7%    50.1%      17112
+
+  Roll 1000:
+    S1 fix   S2 fix      %S1      %S2      %S3     V_expl
+  ------------------------------------------------------
+   p25 r61  p25 r58    26.7%     6.4%    66.9%      25498
+   p25 r61  p50 r65    33.7%    -2.5%    68.8%      21667
+   p25 r61  p75 r73    25.0%     9.6%    65.4%      26734
+   p50 r80  p25 r58    25.6%     5.7%    68.7%      24892
+   p50 r80  p50 r65    32.6%    -5.5%    72.9%      20020
+   p50 r80  p75 r73    24.2%     9.5%    66.3%      26500
+   p75 r80  p25 r58    25.6%     5.7%    68.7%      24892
+   p75 r80  p50 r65    32.6%    -5.5%    72.9%      20020
+   p75 r80  p75 r73    24.2%     9.5%    66.3%      26500
+
+Saved: variance_sensitivity.png
+
+Done!

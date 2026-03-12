@@ -48,6 +48,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
+
+class Tee:
+    """Write to both stdout and a file simultaneously."""
+    def __init__(self, filepath, mode="w"):
+        self.file = open(filepath, mode, encoding="utf-8")
+        self.stdout = sys.stdout
+    def write(self, data):
+        self.stdout.write(data)
+        self.file.write(data)
+    def flush(self):
+        self.stdout.flush()
+        self.file.flush()
+    def close(self):
+        self.file.close()
+
+
 # Derive paths relative to this script's location.
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _PROJECT_ROOT = os.path.dirname(_SCRIPT_DIR)
@@ -61,7 +77,13 @@ from expected_points import parse_data, simulate, detect_backend, prompt_backend
 
 DATA_PATH = os.path.join(_PROJECT_ROOT, "tier data", "items_all_normalised.csv")
 OUTPUT_PATH = os.path.join(_PROJECT_ROOT, "plots")
+RESULTS_PATH = os.path.join(_PROJECT_ROOT, "results")
 os.makedirs(OUTPUT_PATH, exist_ok=True)
+os.makedirs(RESULTS_PATH, exist_ok=True)
+
+# Tee all console output to a text file.
+_tee = Tee(os.path.join(RESULTS_PATH, "variance_decomposition.txt"))
+sys.stdout = _tee
 
 SIMULATIONS = 300_000
 MAX_ROLLS = 1000
@@ -779,3 +801,8 @@ plt.close()
 
 
 print("\nDone!")
+
+# Restore stdout and close the log file.
+sys.stdout = _tee.stdout
+_tee.close()
+print(f"Output saved to: {os.path.join(RESULTS_PATH, 'variance_decomposition.txt')}")

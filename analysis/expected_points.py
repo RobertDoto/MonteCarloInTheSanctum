@@ -330,7 +330,7 @@ def parse_data(filepath):
 
 def simulate(config, max_rolls, simulations=100_000, seed=42, dist_checkpoints=None,
              fix_s1_at_roll=None, fix_s2_at_roll=None, fix_s3=False,
-             use_gpu=None):
+             use_gpu=None, s1_pity_limit=79):
     """
     Runs the Monte Carlo simulation: max_rolls rolls x simulations parallel
     simulations. Returns a dictionary of results including cumulative means,
@@ -448,9 +448,9 @@ def simulate(config, max_rolls, simulations=100_000, seed=42, dist_checkpoints=N
     # For subset 1, this is just 0.005 (0.5%).
     s1_total_p = sum(p for _, p, _ in s1_ot)
 
-    # After 80 consecutive rolls without hitting subset 1, the next roll is
-    # forced into subset 1 (the "pity" mechanic).
-    s1_pity_limit = 79  # counter starts at 0, so >= 79 forces on the 80th roll
+    # After N consecutive rolls without hitting subset 1, the next roll is
+    # forced into subset 1 (the "pity" mechanic). Default: 79 (80th roll).
+    # Controlled by the s1_pity_limit parameter.
 
     # Points awarded when hitting the permanent (transformed) version of S1.
     # s1_pm[0] is the first (and only) permanent item tuple: (name, prob, pts).
