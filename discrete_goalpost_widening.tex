@@ -1,0 +1,628 @@
+\documentclass[11pt, a4paper]{article}
+
+% --- packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{parskip}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black,
+}
+
+\title{%
+    \textbf{Discrete Goalpost Widening} \\[0.4em]
+    \large How Pity Cap Manipulation Extends the Uncertainty Window \\
+    to Maximise Spending Pressure in Gacha Loot Systems
+}
+
+% Suppress author and date blocks entirely.
+\author{\vspace{-2em}}
+\date{\vspace{-2em}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    This paper presents a Monte Carlo analysis of the Sanctum loot
+    system, synthesising two independent findings to expose the
+    monetisation function of the S1 pity cap. A Shapley-value variance
+    decomposition reveals that S1 timing dominates outcome uncertainty
+    in the critical early-to-mid session (accounting for up to 68.9\%
+    of explained variance at roll~50). A parameter sweep across pity
+    caps from 10 to 80 rolls shows that each 10-roll increment extends
+    the zone of peak uncertainty by 11--14 rolls. The synthesis
+    demonstrates that the current 80-roll cap places the \emph{entire}
+    uncertainty window over the typical player's natural session,
+    creating sustained spending pressure through sunk-cost anchoring,
+    near-miss framing, and discrete invisibility. Only 16.5\% of
+    players trigger the pity guarantee by the natural stopping point;
+    for the remaining 83.5\%, the cap functions not as a practical
+    mechanic but as a psychological anchor. The cumulative effect of
+    widening the cap from 10 to 80 rolls generates 79 additional
+    anxious rolls, representing \pounds210--\pounds247 in potential
+    additional spend per player.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+
+% ======================================================================
+\section{Introduction and Motivation}
+\label{sec:intro}
+% ======================================================================
+
+Gacha loot systems are a dominant monetisation strategy in
+free-to-play games, generating revenue through randomised item
+acquisition. A core design element in many such systems is the
+\emph{pity mechanic}: a guaranteed high-value outcome after a
+specified number of unsuccessful rolls. The pity cap is typically
+presented to players as a consumer-friendly safeguard --- a ceiling
+on bad luck. This paper examines whether the cap also serves a
+second, less visible function: as a precision tool for calibrating
+spending pressure.
+
+The Sanctum loot system awards items from a pool of 753 possibilities
+distributed across three subsets:
+\begin{itemize}[nosep]
+    \item \textbf{Subset~1 (S1):} 1 one-time item + 1 permanent item,
+          total selection probability 0.50\%. The one-time S1 item is
+          the highest-value outcome, and its acquisition triggers a
+          \emph{transform} that permanently alters the probability
+          distribution. Pity guarantees this transform within $N$ rolls
+          (default $N = 80$).
+    \item \textbf{Subset~2 (S2):} 10 one-time items + 1 permanent item,
+          total probability 10.00\%.
+    \item \textbf{Subset~3 (S3):} 742 items (5 permanent + 263 emotes +
+          474 icons), total probability 89.50\%.
+\end{itemize}
+
+Each roll selects one item according to a probability distribution
+that evolves dynamically: one-time items are removed after collection,
+and their probability mass is redistributed among remaining items
+within the same subset. The mathematical foundations of this process
+--- two-stage sampling, inverse CDF sampling, and probability
+redistribution --- are detailed in the companion document
+\texttt{simulation\_foundations.pdf}.
+
+The central question of this paper is: \emph{how does varying the S1
+pity cap affect both the statistical properties of player outcomes
+and the psychological conditions under which spending decisions are
+made?}
+
+This is addressed by connecting two independent analyses:
+\begin{enumerate}[nosep]
+    \item A \textbf{Shapley-value variance decomposition} that
+          quantifies how much of the total outcome variance is
+          attributable to S1 timing, S2 timing, and S3 item selection
+          at each roll.
+    \item A \textbf{pity cap parameter sweep} that measures expected
+          point accumulation, variance, and rolls-to-target across
+          caps from 10 to 80 in increments of 10.
+\end{enumerate}
+
+The synthesis of these two findings reveals the mechanism termed
+\emph{discrete goalpost widening}: incremental cap increases that
+each appear modest in isolation but cumulatively extend the zone of
+maximum outcome uncertainty across the player's entire natural session.
+
+
+% ======================================================================
+\section{Method}
+\label{sec:method}
+% ======================================================================
+
+All simulations use 300{,}000 independent trials of up to 1{,}000
+rolls each, executed on an NVIDIA GeForce RTX 5060~Ti via CuPy for
+GPU-accelerated computation. The random seed is fixed at 42 for
+reproducibility. Full implementation details are in
+\texttt{expected\_points.py}.
+
+\subsection{Variance Decomposition}
+\label{sec:method-variance}
+
+The total variance of cumulative points at each roll is decomposed
+into contributions from three sources of randomness:
+
+\begin{itemize}[nosep]
+    \item \textbf{S1 timing:} when the S1 transform occurs.
+    \item \textbf{S2 timing:} when all S2 one-time items are collected.
+    \item \textbf{S3 selection:} which specific S3 items are drawn on
+          each roll.
+\end{itemize}
+
+Following a $2^3$ factorial design, eight simulation configurations
+are run: a baseline with all sources free, three single-fix variants
+(each fixing one source at its baseline median), three double-fix
+variants, and a fully-fixed variant. The contribution of each source
+is computed via Shapley values, which account for interaction effects
+by averaging marginal contributions across all possible orderings.
+
+Formally, for source $i$, the Shapley value is:
+\begin{equation}
+    \phi_i = \sum_{S \subseteq \{1,2,3\} \setminus \{i\}}
+    \frac{|S|!\,(2 - |S|)!}{3!}
+    \left[ V(S \cup \{i\}) - V(S) \right]
+\end{equation}
+where $V(S)$ denotes the variance reduction when the sources in $S$
+are fixed. This ensures the decomposition is unique, symmetric, and
+sums to the total explained variance.
+
+A sensitivity analysis confirms that the decomposition is robust to
+the choice of fix-point: results are stable across the 25th, 50th,
+and 75th percentile trigger rolls for both S1 and S2.
+
+\subsection{Pity Cap Parameter Sweep}
+\label{sec:method-sweep}
+
+The S1 pity cap is swept across
+$\{10, 20, 30, 40, 50, 60, 70, 80\}$ rolls, running 300{,}000
+simulations at each value. For each configuration, the following are
+recorded:
+
+\begin{itemize}[nosep]
+    \item Mean and median cumulative points at checkpoint rolls
+          (10, 20, 30, 50, 80, 100, 250).
+    \item Standard deviation per roll.
+    \item The fraction of simulations that have triggered S1 by each
+          roll.
+    \item Median rolls required to reach point targets
+          (50, 100, 150, 200, 300, 500 points).
+\end{itemize}
+
+\subsection{Synthesis: The Uncertainty Window}
+\label{sec:method-synthesis}
+
+The synthesis phase connects both analyses by measuring S1's variance
+contribution \emph{at each pity cap}. For each cap value, a baseline
+simulation and a fix-S1 variant (forcing S1 to trigger at its median
+roll for that cap) are run. S1's variance share at roll $r$ is:
+\begin{equation}
+    \text{S1 share}(r) = \frac{V_{\text{baseline}}(r) - V_{\text{fix-S1}}(r)}{V_{\text{baseline}}(r)}
+\end{equation}
+
+The \textbf{uncertainty window} is defined as the contiguous roll
+range where S1's smoothed variance share exceeds 30\% (using a
+10-roll moving average). This threshold captures the zone where a
+single binary event --- whether S1 has triggered --- accounts for
+nearly a third or more of all outcome variation.
+
+
+% ======================================================================
+\section{Results}
+\label{sec:results}
+% ======================================================================
+
+\subsection{S1 Timing Dominates Early-to-Mid Session Variance}
+\label{sec:results-variance}
+
+The Shapley decomposition reveals a clear pattern: S1 timing is the
+dominant source of outcome uncertainty throughout the critical
+early-to-mid game, despite S1 items comprising only 0.5\% of the
+probability mass.
+
+\begin{table}[H]
+\centering
+\caption{Shapley variance decomposition at the default pity cap
+(80 rolls). $V_{\text{total}}$ is baseline variance; percentages
+are shares of explained variance
+($V_{\text{total}} - V_{\text{residual}}$).}
+\label{tab:shapley}
+\begin{tabular}{r r r r r r r}
+\toprule
+Roll & $V_{\text{total}}$ & $V_{\text{residual}}$ & S1 & S2 & S3 & Sum \\
+\midrule
+10   & 253       & 27       & 28.4\% & 0.0\%  & 71.6\% & 100.0\% \\
+25   & 952       & 46       & 51.2\% & 0.6\%  & 48.2\% & 100.0\% \\
+50   & 2{,}903   & 97       & 68.9\% & 0.4\%  & 30.7\% & 100.0\% \\
+100  & 20{,}951  & 11{,}911 & 55.6\% & 25.9\% & 18.5\% & 100.0\% \\
+250  & 44{,}774  & 32{,}624 & 47.7\% & 17.8\% & 34.5\% & 100.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At roll 25 --- roughly where many players are actively engaged ---
+S1 timing accounts for 51.2\% of explained variance. By roll 50 this
+rises to 68.9\%. The implication is stark: the single most important
+factor determining whether a player's session feels ``lucky'' or
+``unlucky'' is whether S1 has triggered.
+
+Critically, the interaction effects from the $2^3$ factorial
+analysis confirm that S1 timing acts nearly independently of S2 and
+S3. All two-way and three-way interaction terms are below 1.5\% of
+baseline variance at every checkpoint. This independence means the
+pity cap is a \emph{clean, isolated lever}: adjusting it modifies
+spending pressure without creating unpredictable knock-on effects
+elsewhere in the system.
+
+% --- Figure: Variance decomposition ---
+% Uncomment and adjust path when plots are available:
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/variance_decomposition.png}
+%     \caption{Shapley variance shares by roll. S1 timing dominates
+%     the early-to-mid session before giving way to S3 selection noise
+%     at higher roll counts.}
+%     \label{fig:variance-decomp}
+% \end{figure}
+
+
+\subsection{Pity Cap Sweep: Point Accumulation and Cost}
+\label{sec:results-sweep}
+
+Table~\ref{tab:checkpoints} summarises mean cumulative points at key
+checkpoints across all pity cap values.
+
+\begin{table}[H]
+\centering
+\caption{Mean cumulative points at selected checkpoints by S1 pity
+cap. All values from 300{,}000 simulations.}
+\label{tab:checkpoints}
+\begin{tabular}{r r r r r r r}
+\toprule
+Cap & Roll 10 & Roll 20 & Roll 30 & Roll 50 & Roll 80 & Roll 100 \\
+\midrule
+10 & 39.7  & 346.5 & 653.8  & 1{,}270.3 & 2{,}249.9 & 2{,}965.5 \\
+20 & 42.3  & 81.3  & 146.8  & 508.4     & 1{,}197.8 & 1{,}651.7 \\
+30 & 42.3  & 84.6  & 123.9  & 254.7     & 734.8     & 1{,}166.6 \\
+40 & 42.3  & 84.6  & 127.4  & 232.7     & 673.8     & 924.1     \\
+50 & 42.3  & 84.6  & 127.4  & 212.3     & 472.7     & 866.8     \\
+60 & 42.3  & 84.6  & 127.4  & 215.8     & 452.5     & 683.4     \\
+70 & 42.3  & 84.6  & 127.4  & 215.8     & 433.5     & 663.8     \\
+80 & 42.3  & 84.6  & 127.4  & 215.8     & 414.8     & 645.2     \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The typical player stops around 150 expected points, which
+at cap~80 corresponds to approximately roll~38 at a median cost of
+\pounds101.32 (best-value pricing at \pounds2.67/roll). The pity cap
+itself sits at roll~80, costing \pounds213.31. This creates a gap of
+\pounds111.99 --- the \emph{sunk-cost trap}.
+
+Table~\ref{tab:rolls-to-target} shows median rolls to reach point
+milestones, with GBP equivalents.
+
+\begin{table}[H]
+\centering
+\caption{Median rolls to reach point targets, with best-value GBP
+cost (\pounds2.67/roll).}
+\label{tab:rolls-to-target}
+\begin{tabular}{r r r r r r r}
+\toprule
+Cap & 50\,pts & 100\,pts & 150\,pts & 200\,pts & 300\,pts & 500\,pts \\
+\midrule
+10 & 14 (\pounds37)  & 20 (\pounds53)  & 20 (\pounds53)   & 20 (\pounds53)   & 20 (\pounds53)   & 30 (\pounds80)  \\
+20 & 13 (\pounds35)  & 26 (\pounds69)  & 38 (\pounds101)  & 40 (\pounds107)  & 40 (\pounds107)  & 56 (\pounds149) \\
+30 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 49 (\pounds131)  & 60 (\pounds160)  & 60 (\pounds160) \\
+40 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 50 (\pounds133)  & 67 (\pounds179)  & 80 (\pounds213) \\
+80 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 50 (\pounds133)  & 68 (\pounds181)  & 91 (\pounds243) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent A key observation: at the 150-point milestone (the typical
+stopping point), median rolls are \emph{identical} across caps 20--80.
+The cap does not materially change how quickly a typical player
+reaches their natural endpoint. Its effect operates beyond that
+point, in the tail of the session.
+
+% --- Figure: Mean points by cap ---
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/pity_cap_mean_points.png}
+%     \caption{Top: mean cumulative points vs roll number for each pity
+%     cap. Bottom: fraction of simulations with S1 triggered. Lower caps
+%     accelerate both point accumulation and S1 resolution.}
+%     \label{fig:mean-points}
+% \end{figure}
+
+% --- Figure: Rolls to target ---
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/pity_cap_rolls_to_target.png}
+%     \caption{Median rolls required to reach point targets, grouped by
+%     pity cap. Differences are negligible at low targets and widen
+%     substantially at higher targets.}
+%     \label{fig:rolls-target}
+% \end{figure}
+
+
+\subsection{The Uncertainty Window}
+\label{sec:results-window}
+
+Combining the variance decomposition with the pity cap sweep produces
+the central result. Table~\ref{tab:uncertainty} shows the uncertainty
+window --- the roll range where S1 timing drives more than 30\% of
+total variance --- at each cap.
+
+\begin{table}[H]
+\centering
+\caption{Uncertainty window by pity cap. Width is the number of rolls
+where S1 timing accounts for $>$30\% of total outcome variance.}
+\label{tab:uncertainty}
+\begin{tabular}{r r r r r r}
+\toprule
+Cap & Median S1 & Start & End & Width & Peak share \\
+\midrule
+10 & 10 & ---  & ---  & 0  & 14.6\% \\
+20 & 20 & 18   & 23   & 6  & 35.1\% \\
+30 & 30 & 18   & 37   & 20 & 49.6\% \\
+40 & 40 & 18   & 49   & 32 & 58.3\% \\
+50 & 50 & 18   & 60   & 43 & 64.3\% \\
+60 & 60 & 18   & 72   & 55 & 66.2\% \\
+70 & 70 & 18   & 83   & 66 & 66.1\% \\
+80 & 80 & 18   & 96   & 79 & 66.1\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent At cap~80, the uncertainty window spans rolls 18--96. The
+typical player's entire session (rolls 1--38) falls within this zone.
+The player spends their \emph{entire experience} inside the region
+of maximum outcome uncertainty.
+
+Each 10-roll cap increment extends the window by 11--14 rolls:
+
+\begin{table}[H]
+\centering
+\caption{Marginal impact of each 10-roll cap increase on the
+uncertainty window, with associated spending potential.}
+\label{tab:marginal}
+\begin{tabular}{r r r r r}
+\toprule
+Change & Old width & New width & $\Delta$ rolls &
+Extra spend (\pounds) \\
+\midrule
+$10 \to 20$ & 0  & 6  & $+6$  & 16.00 -- 18.74 \\
+$20 \to 30$ & 6  & 20 & $+14$ & 37.33 -- 43.73 \\
+$30 \to 40$ & 20 & 32 & $+12$ & 32.00 -- 37.48 \\
+$40 \to 50$ & 32 & 43 & $+11$ & 29.33 -- 34.36 \\
+$50 \to 60$ & 43 & 55 & $+12$ & 32.00 -- 37.48 \\
+$60 \to 70$ & 55 & 66 & $+11$ & 29.33 -- 34.36 \\
+$70 \to 80$ & 66 & 79 & $+13$ & 34.66 -- 40.61 \\
+\midrule
+\textbf{Total} & & & \textbf{$+79$} &
+\textbf{210.65 -- 246.75} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent No single increment exceeds 14 rolls. Each change, viewed
+in isolation, appears modest. The cumulative effect is an expansion
+of 79 anxious rolls representing \pounds210--\pounds247 in potential
+additional spend per player.
+
+% --- Figure: Variance share by cap ---
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/synthesis_variance_share.png}
+%     \caption{S1 variance share over roll number for each pity cap.
+%     The dashed red line marks the 30\% uncertainty threshold. Higher
+%     caps push the curve above this threshold for longer, widening the
+%     uncertainty window.}
+%     \label{fig:variance-share}
+% \end{figure}
+
+% --- Figure: Combined uncertainty + points (cap 80 vs 40) ---
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/synthesis_combined.png}
+%     \caption{The uncertainty--spending nexus. Shaded regions show the
+%     uncertainty window for cap~80 (red) and cap~40 (blue). The
+%     vertical dashed line marks the typical stopping roll. At cap~80
+%     the entire session falls within the anxious zone.}
+%     \label{fig:combined}
+% \end{figure}
+
+% --- Figure: Marginal anxious rolls ---
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=\textwidth]{plots/synthesis_marginal_anxious.png}
+%     \caption{Marginal expansion of the uncertainty window per 10-roll
+%     cap increase (bars), overlaid with the corresponding loss in mean
+%     points at the reference roll (line). Each increment is modest;
+%     the cumulative effect is not.}
+%     \label{fig:marginal-anxious}
+% \end{figure}
+
+
+% ======================================================================
+\section{Synthesis: The Discrete Goalpost Widening Effect}
+\label{sec:synthesis}
+% ======================================================================
+
+The results converge on a single mechanism, described here in three
+parts.
+
+\subsection{The Monetisation Geometry}
+\label{sec:synthesis-geometry}
+
+At 400~RP per roll and best-value pricing (\pounds2.67/roll):
+
+\begin{itemize}[nosep]
+    \item Reaching 150 points (roll~$\sim$38): \pounds101.32
+    \item Reaching the pity cap (roll~80): \pounds213.31
+    \item The gap: \pounds111.99
+\end{itemize}
+
+A player at the natural stopping point has spent approximately
+\pounds101. The pity guarantee is another \pounds112 away. This gap
+is the monetisation sweet spot: large enough to extract significant
+additional spend, but framed as ``finishing what you started'' rather
+than initiating a new purchase.
+
+At roll~38 with cap~80, only 16.5\% of players have triggered S1.
+The remaining 83.5\% leave without ever experiencing the pity
+guarantee. The cap exists not as a practical mechanic but as a
+\emph{psychological anchor}.
+
+
+\subsection{Three Psychological Functions of the Pity Cap}
+\label{sec:synthesis-psychology}
+
+\subsubsection*{1. Sunk Cost Anchor}
+
+A player at 150 points (roll~38) is framed as being 42 rolls away
+from a guaranteed outcome. Stopping is reframed as a \emph{loss} ---
+walking away from a ``sure thing'' --- rather than a natural endpoint.
+The gap represents \pounds112--\pounds131 of additional spend,
+depending on RP package pricing.
+
+\subsubsection*{2. Near-Miss Framing}
+
+With only 16.5\% triggering S1 by the typical stopping point, most
+players leave feeling they ``almost'' got lucky. The variance
+decomposition confirms this is not paranoia: S1 timing genuinely is
+the dominant factor separating good outcomes from bad ones in the
+early-to-mid session (68.9\% of explained variance at roll~50). A
+lower cap would resolve this uncertainty earlier, collapsing the
+emotional hook before it becomes entangled with spending decisions.
+
+\subsubsection*{3. Discrete Invisibility}
+
+Each 10-roll cap increase adds only 11--14 anxious rolls. No single
+change feels dramatic. A designer moving the cap from 40 to 50 adds
+11 rolls of uncertainty --- approximately \pounds29--\pounds34 in
+potential spend --- an increment that would be difficult for players
+to perceive, let alone protest. But the cumulative effect from cap~10
+to cap~80 is 79 extra anxious rolls worth \pounds211--\pounds247.
+
+This is the core of the discrete goalpost widening effect: a series
+of individually invisible adjustments that, in aggregate, reshape the
+entire psychological landscape of a player's session.
+
+
+\subsection{The Isolation Property}
+\label{sec:synthesis-isolation}
+
+The interaction effects from the $2^3$ factorial analysis deserve
+emphasis. All S1$\times$S2, S1$\times$S3, S2$\times$S3, and
+S1$\times$S2$\times$S3 interaction terms are below 1.5\% of
+baseline variance at every checkpoint examined. This means that the
+pity cap operates as an \emph{independent lever}: adjusting it does
+not create cascading effects on S2 completion dynamics or S3 item
+selection. From a system design perspective, this is a precision tool.
+The designer can tune spending pressure with confidence that only the
+intended variable is affected.
+
+
+% ======================================================================
+\section{What a Fairer System Would Look Like}
+\label{sec:fair}
+% ======================================================================
+
+The analysis also reveals what the system \emph{could} be.
+
+At a pity cap of 30, the uncertainty window spans rolls 18--37 with a
+width of 20 rolls and a peak S1 variance share of 49.6\%. This places
+the resolution of outcome uncertainty approximately at the natural
+stopping point: by the time a typical player reaches 150 points, the
+question of whether they were ``lucky'' has been substantially
+answered. The sunk-cost anchor is weakened because the guarantee is
+only \pounds80 away (versus \pounds213 at cap~80), and the near-miss
+window does not extend meaningfully beyond the player's intended
+session.
+
+At cap~40, the window is 32 rolls wide (rolls 18--49), still
+resolving within a reasonable horizon. The cost to reach the pity
+guarantee is \pounds107 --- comparable to the cost of reaching 150
+points naturally.
+
+Either of these configurations would preserve the consumer-facing
+function of the pity mechanic (protection against extreme bad luck)
+while substantially reducing its secondary function as a spending
+pressure tool. The player would still experience uncertainty --- this
+is inherent to any probabilistic system --- but that uncertainty would
+not be \emph{architecturally extended} to coincide with every
+spending decision they make during their session.
+
+
+% ======================================================================
+\section{Limitations}
+\label{sec:limitations}
+% ======================================================================
+
+Several limitations should be noted.
+
+First, the analysis models a ``typical'' player stopping at
+approximately 150 expected points. Real player behaviour is
+heterogeneous: some stop earlier, some pursue the pity cap, and
+whale spending patterns differ qualitatively. Modelling a
+distribution of player types and their interaction with the
+uncertainty window would strengthen the conclusions.
+
+Second, the psychological mechanisms described --- sunk cost,
+near-miss framing, discrete invisibility --- are inferred from the
+statistical structure rather than measured directly through player
+data or behavioural experiments. The simulation demonstrates that
+the \emph{conditions} for these effects exist; it does not prove
+that players experience them as described.
+
+Third, the model treats each roll as an independent spending
+decision. In practice, players often purchase RP in bulk and may
+pre-commit to a number of rolls before beginning. The relationship
+between the uncertainty window and actual spending behaviour depends
+on the granularity of purchase decisions.
+
+Fourth, only the S1 pity cap is varied. The S2 pity system (not
+explored here) introduces additional interactions that may modify the
+overall spending pressure landscape at higher roll counts.
+
+
+% ======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ======================================================================
+
+This analysis demonstrates that the S1 pity cap in the Sanctum loot
+system functions as a monetisation lever with three convergent
+properties:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Variance dominance.} S1 timing accounts for up to
+          68.9\% of explained outcome variance in the critical
+          early-to-mid session. Whether a player's experience feels
+          lucky or unlucky is overwhelmingly determined by a single
+          binary event.
+
+    \item \textbf{Window extension.} Each 10-roll increase in the
+          pity cap extends the zone of peak uncertainty by 11--14
+          rolls. At cap~80, this zone spans the player's entire
+          natural session.
+
+    \item \textbf{Clean isolation.} The pity cap operates independently
+          of S2 and S3 dynamics, with all interaction effects below
+          1.5\% of baseline variance. It is a precision instrument.
+\end{enumerate}
+
+The cumulative effect --- discrete goalpost widening --- transforms a
+consumer protection mechanic into a spending optimisation tool. The
+cap at 80 rolls creates \pounds112 of sunk-cost distance beyond the
+natural stopping point, ensures that 83.5\% of players leave inside
+the uncertainty window, and achieves this through increments that are
+individually invisible.
+
+The data suggests that a cap of 30--40 rolls would preserve the
+protective function of the pity system while resolving outcome
+uncertainty within the player's natural session. The difference
+between cap~40 and cap~80 is not player protection --- it is
+\pounds107 of additional spending pressure per player, applied
+through a mechanism that is statistically precise and psychologically
+difficult to perceive.
+
+\end{document}
