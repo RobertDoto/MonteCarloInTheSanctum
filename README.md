@@ -17,13 +17,18 @@ master/
 │   ├── expected_points_cpu.py      CPU-only variant (100k sims x 3000 rolls)
 │   ├── expected_points_gpu.py      GPU-only variant
 │   ├── validity_testing.py         Statistical tests comparing CPU vs GPU output
-│   └── variance_decomposition.py   Shapley-value variance attribution
+│   ├── variance_decomposition.py   Shapley-value variance attribution, interaction effects, sensitivity sweep
+│   ├── pity_cap_analysis.py        Pity cap sweep — cost-to-target in rolls and GBP
+│   └── pity_cap_synthesis.py       Connects variance and pity cap findings via spending pressure
 ├── plots/
 │   ├── plot_generation.py          Generates all visualisations from saved results
 │   └── *.png                       Pre-generated plots
 ├── results/
 │   ├── simulation_results.csv      Summary statistics (one row per roll)
-│   └── simulation_snapshots.npz    Full distributions at checkpoint rolls
+│   ├── simulation_snapshots.npz    Full distributions at checkpoint rolls
+│   ├── variance_decomposition.txt  Auto-saved console output from variance analysis
+│   ├── pity_cap_analysis.txt       Auto-saved console output from pity cap sweep
+│   └── pity_cap_synthesis.txt      Auto-saved console output from synthesis analysis
 ├── tier data/
 │   ├── items_all_normalised.csv    Complete item pool (755 entries)
 │   ├── join_tiers.py               Merges per-tier CSVs into the master file
@@ -82,6 +87,49 @@ python analysis/validity_testing.py
 ```
 
 Runs both backends and applies t-test, F-test, and Kolmogorov-Smirnov tests.
+
+### Variance decomposition
+
+```
+python analysis/variance_decomposition.py
+```
+
+Decomposes total variance at each roll into contributions from three sources — S1 timing, S2 timing, and S3 selection — using Shapley values from cooperative game theory. Runs all 8 combinatorial fix/free simulations, then computes:
+
+- **Shapley attribution:** fractional variance explained by each source at every roll
+- **Interaction effects:** 2^3 factorial ANOVA contrasts measuring whether sources amplify or cancel each other (finding: interactions are <1.5% of baseline variance — the sources act independently)
+- **Sensitivity sweep:** re-runs Shapley analysis with fix-points at the 25th, 50th, and 75th percentile trigger rolls to test robustness of the decomposition
+
+Produces five plots in `plots/` (`variance_decomposition.png`, `variance_std_comparison.png`, `variance_early_detail.png`, `variance_interactions.png`, `variance_sensitivity.png`) and saves console output to `results/variance_decomposition.txt`.
+
+### Pity cap analysis
+
+```
+python analysis/pity_cap_analysis.py
+```
+
+Sweeps the S1 pity cap across values [10, 20, 30, ..., 80] and measures the impact on point accumulation and real-world cost. For each cap value, runs a full simulation and reports:
+
+- Mean/median points at checkpoint rolls
+- Rolls required to reach point targets (50, 100, 150, 200, 300, 500)
+- GBP cost to each target using real RP pricing (400 RP per roll, best value £2.67/roll)
+- Marginal impact of each 10-roll cap reduction
+
+Produces three plots in `plots/` (`pity_cap_mean_points.png`, `pity_cap_rolls_to_target.png`, `pity_cap_marginal_value.png`) and saves console output to `results/pity_cap_analysis.txt`.
+
+### Pity cap synthesis
+
+```
+python analysis/pity_cap_synthesis.py
+```
+
+Connects the variance decomposition and pity cap analyses through a psychological spending pressure lens. For each pity cap, measures:
+
+- **Uncertainty window:** the range of rolls where S1 timing accounts for >30% of total variance — the "anxious zone" where players don't know if they'll get lucky
+- **Spending pressure:** how many anxious rolls a player experiences before reaching common point targets
+- **Marginal extraction:** additional GBP spend per 10-roll cap increment (~£30 per step at best-value pricing)
+
+Produces three plots in `plots/` (`synthesis_variance_share.png`, `synthesis_combined.png`, `synthesis_marginal_anxious.png`) and saves console output to `results/pity_cap_synthesis.txt`.
 
 ## OCR Data Pipeline
 
