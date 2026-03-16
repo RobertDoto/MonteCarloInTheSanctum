@@ -6,7 +6,7 @@ Monte Carlo simulation and monetisation analysis of a gacha/loot system [League 
 
 The loot system awards items from a pool of 753 possibilities across three subsets. Each roll selects one item according to a probability distribution that changes over time: one-time items are removed after collection, and their probability is redistributed among remaining items within the same subset. Pity mechanics force outcomes after streaks of bad luck.
 
-This project simulates the process 300,000 times in parallel to estimate expected cumulative points, percentile bands, and distribution shapes at every roll. GPU acceleration (via CuPy) is supported for NVIDIA hardware.
+This project simulates the process 300,000 times in parallel to estimate expected cumulative points, percentile bands, and distribution shapes at every roll. GPU acceleration (via CuPy) is supported for NVIDIA hardware and is selected automatically when available.
 
 ## Repository Structure
 
@@ -61,7 +61,7 @@ For NVIDIA GPUs, install [CuPy](https://cupy.dev/) matching your CUDA version:
 pip install cupy-cuda12x
 ```
 
-Replace `12x` with your CUDA version (e.g. `cupy-cuda11x`). The simulator auto-detects GPU availability and prompts for backend selection.
+Replace `12x` with your CUDA version (e.g. `cupy-cuda11x`). The simulator auto-detects GPU availability and uses it when present.
 
 ## Usage
 
