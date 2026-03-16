@@ -1,6 +1,6 @@
 # Sanctum Probabilities
 
-Monte Carlo simulation of the Sanctum gatcha/loot system, estimating expected point accumulation over many rolls.
+Monte Carlo simulation and monetisation analysis of the Sanctum gacha/loot system, covering expected point accumulation, variance decomposition, pity cap economics, and the discrete goalpost widening effect.
 
 ## Overview
 
@@ -35,8 +35,9 @@ master/
 │   ├── A/                          A-tier source data and images
 │   ├── B/                          B-tier source data, images, and OCR pipeline
 │   └── S/                          S-tier source data and images
-├── pity_collision.tex/.pdf         Markov chain analysis of simultaneous pity events
-├── simulation_foundations.tex/.pdf  Mathematical foundations of the simulator
+├── discrete_goalpost_widening.tex/.pdf  Monetisation analysis — how pity cap manipulation extends spending pressure
+├── pity_collision.tex/.pdf             Markov chain analysis of simultaneous pity events
+├── simulation_foundations.tex/.pdf     Mathematical foundations of the simulator
 ├── requirements.txt                Python dependencies
 └── LICENSE                         CC BY-NC-ND 4.0
 ```
@@ -183,6 +184,7 @@ python "tier data/B/ocr image pipeline/quality_assurance_b_tier.py"
 
 ## Mathematical Documentation
 
+- **discrete_goalpost_widening.pdf** -- Synthesises variance decomposition and pity cap sweep results to show how incremental cap increases extend the uncertainty window, creating sustained spending pressure through sunk-cost anchoring, near-miss framing, and discrete invisibility. Analyses both casual players (150-point redemption threshold) and skin-seekers (pity cap target), and examines how RP package granularity compounds the extraction.
 - **pity_collision.pdf** -- Derives the long-run probability of simultaneous S-tier and A-tier pity events using stationary distributions of Markov chains.
 - **simulation_foundations.pdf** -- Explains why Monte Carlo simulation is used, and the theory behind two-stage sampling, inverse CDF sampling, probability redistribution, tier grouping, and percentile estimation.
 
