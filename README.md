@@ -182,7 +182,7 @@ python "tier data/B/ocr image pipeline/quality_assurance_b_tier.py"
 
 **Output:** `tier data/B/b_tier_items_normalised.csv`, which feeds into `join_tiers.py` to produce the master `items_all_normalised.csv`.
 
-## Mathematical Documentation
+## Mathematical Documentation & Summaries
 
 - **discrete_goalpost_widening.pdf** -- Synthesises variance decomposition and pity cap sweep results to show how incremental cap increases extend the uncertainty window, creating sustained spending pressure through sunk-cost anchoring, near-miss framing, and discrete invisibility. Analyses both casual players (150-point redemption threshold) and skin-seekers (pity cap target), and examines how RP package granularity compounds the extraction.
 - **pity_collision.pdf** -- Derives the long-run probability of simultaneous S-tier and A-tier pity events using stationary distributions of Markov chains.
