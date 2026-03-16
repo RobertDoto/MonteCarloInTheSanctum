@@ -1,6 +1,6 @@
 # Sanctum Probabilities
 
-Monte Carlo simulation and monetisation analysis of the Sanctum gacha/loot system, covering expected point accumulation, variance decomposition, pity cap economics, and the discrete goalpost widening effect.
+Monte Carlo simulation and monetisation analysis of a gacha/loot system [League Of Legends], covering expected point accumulation, variance decomposition, pity cap economics, and the discrete goalpost widening effect.
 
 ## Overview
 
