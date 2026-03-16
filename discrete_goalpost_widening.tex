@@ -46,15 +46,18 @@
     caps from 10 to 80 rolls shows that each 10-roll increment extends
     the zone of peak uncertainty by 11--14 rolls. The synthesis
     demonstrates that the current 80-roll cap places the \emph{entire}
-    uncertainty window over the typical player's natural session,
-    creating sustained spending pressure through sunk-cost anchoring,
-    near-miss framing, and discrete invisibility. Only 16.5\% of
-    players trigger the pity guarantee by the natural stopping point;
-    for the remaining 83.5\%, the cap functions not as a practical
-    mechanic but as a psychological anchor. The cumulative effect of
-    widening the cap from 10 to 80 rolls generates 79 additional
-    anxious rolls, representing \pounds210--\pounds247 in potential
-    additional spend per player.
+    uncertainty window over both player archetypes: casual players
+    who exit at the 150-point redemption threshold (roll~$\sim$38)
+    and skin-seekers who commit to the pity cap for the max prize
+    (roll~80). For casual players, only 16.5\% trigger the pity
+    guarantee by their exit point; the cap functions as a
+    psychological anchor rather than a practical mechanic. For
+    skin-seekers, the cap sets the price of the guaranteed outcome
+    at \pounds213 rather than the \pounds80--\pounds107 it would
+    cost at caps of 30--40. The cumulative effect of widening the
+    cap from 10 to 80 rolls generates 79 additional anxious rolls,
+    representing \pounds210--\pounds247 in potential additional spend
+    per player.
 \end{abstract}
 
 \tableofcontents
@@ -288,11 +291,16 @@ Cap & Roll 10 & Roll 20 & Roll 30 & Roll 50 & Roll 80 & Roll 100 \\
 \end{tabular}
 \end{table}
 
-\noindent The typical player stops around 150 expected points, which
-at cap~80 corresponds to approximately roll~38 at a median cost of
-\pounds101.32 (best-value pricing at \pounds2.67/roll). The pity cap
-itself sits at roll~80, costing \pounds213.31. This creates a gap of
-\pounds111.99 --- the \emph{sunk-cost trap}.
+\noindent Players fall into two broad categories. \emph{Skin-seekers}
+enter the system aiming for the S1 max prize (the Viego skin),
+which requires reaching the pity cap at roll~80 --- a cost of
+\pounds213.31 at best-value pricing (\pounds2.67/roll).
+\emph{Casual players} engage without committing to the full pity
+distance and typically accumulate around 150 expected points
+(roll~$\sim$38, \pounds101.32) before stopping. The gap between
+these two endpoints --- \pounds111.99 --- defines the
+\emph{sunk-cost trap} for casual players who did not initially
+intend to reach pity but find themselves anchored by prior spend.
 
 Table~\ref{tab:rolls-to-target} shows median rolls to reach point
 milestones, with GBP equivalents.
@@ -315,11 +323,13 @@ Cap & 50\,pts & 100\,pts & 150\,pts & 200\,pts & 300\,pts & 500\,pts \\
 \end{tabular}
 \end{table}
 
-\noindent A key observation: at the 150-point milestone (the typical
-stopping point), median rolls are \emph{identical} across caps 20--80.
-The cap does not materially change how quickly a typical player
-reaches their natural endpoint. Its effect operates beyond that
-point, in the tail of the session.
+\noindent A key observation: at the 150-point milestone, median rolls
+are \emph{identical} across caps 20--80. For casual players, the cap
+does not materially change how quickly they reach this point. For
+skin-seekers, however, the cap \emph{is} the target: the pity
+guarantee at roll~80 is the entire reason they are spending. The
+cap determines both the cost of entry and the length of the
+uncertainty they must endure to reach it.
 
 % --- Figure: Mean points by cap ---
 % \begin{figure}[H]
@@ -371,10 +381,11 @@ Cap & Median S1 & Start & End & Width & Peak share \\
 \end{tabular}
 \end{table}
 
-\noindent At cap~80, the uncertainty window spans rolls 18--96. The
-typical player's entire session (rolls 1--38) falls within this zone.
-The player spends their \emph{entire experience} inside the region
-of maximum outcome uncertainty.
+\noindent At cap~80, the uncertainty window spans rolls 18--96. For
+casual players (rolls 1--38), the entire session falls within this
+zone. For skin-seekers (rolls 1--80), they spend their entire
+journey inside the region of maximum outcome uncertainty before the
+pity guarantee resolves it at the last possible moment.
 
 Each 10-roll cap increment extends the window by 11--14 rolls:
 
@@ -452,24 +463,154 @@ parts.
 \subsection{The Monetisation Geometry}
 \label{sec:synthesis-geometry}
 
-At 400~RP per roll and best-value pricing (\pounds2.67/roll):
+At 400~RP per roll and best-value pricing (\pounds2.67/roll), two
+distinct spending trajectories emerge:
 
 \begin{itemize}[nosep]
-    \item Reaching 150 points (roll~$\sim$38): \pounds101.32
-    \item Reaching the pity cap (roll~80): \pounds213.31
-    \item The gap: \pounds111.99
+    \item \textbf{Skin-seekers} target the S1 pity guarantee and
+          budget for roll~80: \pounds213.31. This is their
+          \emph{intended} spend from the outset.
+    \item \textbf{Casual players} accumulate $\sim$150 points by
+          roll~$\sim$38: \pounds101.32. At this threshold the
+          accumulated points can be redeemed for a specific reward
+          outside the loot system, providing a natural exit point.
+    \item The gap between these endpoints: \pounds111.99.
 \end{itemize}
 
-A player at the natural stopping point has spent approximately
-\pounds101. The pity guarantee is another \pounds112 away. This gap
-is the monetisation sweet spot: large enough to extract significant
-additional spend, but framed as ``finishing what you started'' rather
-than initiating a new purchase.
-
+For \textbf{casual players}, the gap is the monetisation sweet spot:
+large enough to extract significant additional spend, but framed as
+``finishing what you started'' rather than initiating a new purchase.
 At roll~38 with cap~80, only 16.5\% of players have triggered S1.
-The remaining 83.5\% leave without ever experiencing the pity
-guarantee. The cap exists not as a practical mechanic but as a
-\emph{psychological anchor}.
+Those who stop here leave without the max prize, and the pity cap
+functions as a \emph{psychological anchor} --- a visible guarantee
+that reframes quitting as a loss.
+
+For \textbf{skin-seekers}, the monetisation operates differently.
+These players enter the system already committed to reaching the
+pity cap. The uncertainty window does not need to \emph{trick} them
+into spending more --- they have already accepted the full cost. Instead,
+the cap's function is to \emph{set the price}: an 80-roll cap means
+\pounds213 rather than the \pounds80--\pounds107 it would cost at
+caps of 30--40. The discrete goalpost widening effect determines
+\emph{how much} the skin costs, not whether the player pursues it.
+A player who would have paid \pounds80 for the skin at cap~30 must
+now pay \pounds213 for the identical outcome at cap~80.
+
+
+\subsection{Package Granularity and Forced Overspend}
+\label{sec:synthesis-packages}
+
+The spending pressure created by the pity cap does not operate in
+isolation --- it is compounded by the structure of the RP package
+store. Table~\ref{tab:packages} lists the available packages.
+
+\begin{table}[H]
+\centering
+\caption{RP packages with effective rolls per package. No package
+yields a whole number of rolls (400~RP each).}
+\label{tab:packages}
+\begin{tabular}{r r r r}
+\toprule
+RP & GBP & Rolls covered & GBP/roll \\
+\midrule
+575    & \pounds4.49  & 1.44 & \pounds3.12 \\
+1{,}450  & \pounds10.99 & 3.63 & \pounds3.03 \\
+2{,}850  & \pounds20.99 & 7.13 & \pounds2.95 \\
+5{,}000  & \pounds34.99 & 12.50 & \pounds2.80 \\
+7{,}250  & \pounds49.99 & 18.13 & \pounds2.76 \\
+15{,}000 & \pounds99.99 & 37.50 & \pounds2.67 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Two properties of this structure deserve attention.
+
+\subsubsection*{1. Fractional Roll Counts}
+
+Every package yields a fractional number of rolls. Division of each
+package size by the roll cost (400~RP) never produces an integer.
+This means that \emph{no single package purchase} can be exactly
+exhausted through rolling --- there is always a residual RP balance.
+
+More critically, common combinations also fail to tile onto key roll
+milestones. Consider both player types:
+
+\textbf{Casual player} targeting 150 points ($\sim$38 rolls =
+15{,}200~RP):
+
+\begin{itemize}[nosep]
+    \item $1 \times 15{,}000$ RP (\pounds99.99): 200~RP short ---
+          requires a top-up purchase. The cheapest option (575~RP,
+          \pounds4.49) leaves 375~RP residual, totalling \pounds104.48
+          for 38 usable rolls.
+    \item $2 \times 7{,}250$ RP (\pounds99.98): yields 14{,}500~RP,
+          still 700~RP short. A third package is required.
+    \item $7{,}250 + 5{,}000 + 2{,}850$ RP (\pounds105.97): yields
+          15{,}100~RP, still 100~RP short of roll~38.
+\end{itemize}
+
+\textbf{Skin-seeker} targeting the pity cap (80 rolls = 32{,}000~RP):
+
+\begin{itemize}[nosep]
+    \item $2 \times 15{,}000$ RP (\pounds199.98): yields 30{,}000~RP
+          --- 2{,}000~RP (5 rolls) short. Requires a third package.
+    \item $2 \times 15{,}000 + 2{,}850$ RP (\pounds220.97): yields
+          32{,}850~RP --- 850~RP surplus (2.1 wasted rolls).
+    \item $15{,}000 + 7{,}250 + 5{,}000 + 5{,}000$ RP (\pounds219.96):
+          yields 32{,}250~RP --- 250~RP surplus.
+\end{itemize}
+
+\noindent In neither case can the player purchase exactly the RP
+they need. The casual player is forced into a top-up that creates
+residual RP --- a \emph{re-engagement hook} that feels wasteful to
+abandon. The skin-seeker, despite committing to the largest
+purchase in the system, must still overspend by \pounds7--\pounds21
+beyond the idealised \pounds213 cost, and is left with surplus RP
+that nudges toward further rolling.
+
+\subsubsection*{2. Non-Uniform Increments}
+
+The package sizes (575, 1{,}450, 2{,}850, 5{,}000, 7{,}250,
+15{,}000) are not multiples of a common base. If packages were sold
+in clean multiples of 400~RP --- or even in round thousands --- a
+player could calculate exactly how many rolls they were buying and
+purchase accordingly. Instead, the irregular increments introduce a
+\emph{currency obfuscation layer}: the conversion from pounds to RP
+to rolls requires mental arithmetic that most players will
+approximate rather than compute precisely.
+
+This approximation systematically favours the house. A player who
+reasons ``I need about 15{,}000~RP, the big package covers that''
+is implicitly accepting a 200~RP shortfall. A player who reasons
+``two medium packages should be enough'' (14{,}500~RP) is 700~RP
+short. In both cases, the player either stops short of their target
+or buys an additional package that mostly goes to waste.
+
+\subsubsection*{Interaction with the Pity Cap}
+
+The package structure and the pity cap form a complementary system.
+The pity cap determines \emph{how many rolls} a player desires by
+anchoring a guaranteed outcome at a specific distance. The package
+structure ensures that \emph{purchasing those rolls} always involves
+waste. Together, they create a two-layer extraction mechanism:
+
+\begin{enumerate}[nosep]
+    \item The uncertainty window pressures the player to want more
+          rolls than they originally intended.
+    \item The package granularity ensures that buying those rolls
+          produces leftover currency that encourages yet another
+          session.
+\end{enumerate}
+
+\noindent This interaction means that the real cost of engaging with
+the system is consistently higher than the idealised best-value
+figures used elsewhere in this paper. The \pounds101.32 cost for a
+casual player to reach the 150-point redemption threshold assumes
+perfect RP efficiency; the actual purchase cost is
+\pounds104.48--\pounds105.97. For skin-seekers targeting the pity
+cap, the idealised \pounds213.31 becomes \pounds219.96--\pounds220.97
+in practice. In both cases, residual RP either goes unused or seeds
+further spending.
 
 
 \subsection{Three Psychological Functions of the Pity Cap}
@@ -477,21 +618,38 @@ guarantee. The cap exists not as a practical mechanic but as a
 
 \subsubsection*{1. Sunk Cost Anchor}
 
-A player at 150 points (roll~38) is framed as being 42 rolls away
-from a guaranteed outcome. Stopping is reframed as a \emph{loss} ---
-walking away from a ``sure thing'' --- rather than a natural endpoint.
-The gap represents \pounds112--\pounds131 of additional spend,
-depending on RP package pricing.
+For \textbf{casual players}, reaching 150 points (roll~38) creates
+a framing where they are 42 rolls away from a guaranteed outcome.
+Stopping is reframed as a \emph{loss} --- walking away from a
+``sure thing'' --- rather than a natural endpoint. The gap
+represents \pounds112--\pounds131 of additional spend, depending on
+RP package pricing.
+
+For \textbf{skin-seekers}, the sunk cost operates in reverse:
+having committed to the \pounds213+ spend from the start, they are
+anchored to completing all 80 rolls regardless of intermediate
+outcomes. A skin-seeker who triggers S1 naturally at roll~30 has
+``wasted'' their remaining budget headroom, but a skin-seeker at
+roll~60 without S1 has already spent \pounds160 and faces the
+classic sunk-cost compulsion to continue.
 
 \subsubsection*{2. Near-Miss Framing}
 
-With only 16.5\% triggering S1 by the typical stopping point, most
-players leave feeling they ``almost'' got lucky. The variance
+For \textbf{casual players}, with only 16.5\% triggering S1 by
+roll~38, most leave feeling they ``almost'' got lucky. The variance
 decomposition confirms this is not paranoia: S1 timing genuinely is
 the dominant factor separating good outcomes from bad ones in the
 early-to-mid session (68.9\% of explained variance at roll~50). A
 lower cap would resolve this uncertainty earlier, collapsing the
 emotional hook before it becomes entangled with spending decisions.
+
+For \textbf{skin-seekers}, near-miss framing operates throughout
+their entire session. Every roll that does not trigger S1 naturally
+(at 0.5\% per roll) reinforces the feeling that the next roll
+\emph{could} be the one --- even though the simulation shows the
+median player never triggers S1 before the pity cap forces it.
+The 79-roll uncertainty window means the skin-seeker spends their
+entire journey in a state of manufactured near-miss anticipation.
 
 \subsubsection*{3. Discrete Invisibility}
 
@@ -530,26 +688,29 @@ The analysis also reveals what the system \emph{could} be.
 
 At a pity cap of 30, the uncertainty window spans rolls 18--37 with a
 width of 20 rolls and a peak S1 variance share of 49.6\%. This places
-the resolution of outcome uncertainty approximately at the natural
-stopping point: by the time a typical player reaches 150 points, the
-question of whether they were ``lucky'' has been substantially
-answered. The sunk-cost anchor is weakened because the guarantee is
-only \pounds80 away (versus \pounds213 at cap~80), and the near-miss
-window does not extend meaningfully beyond the player's intended
-session.
+the resolution of outcome uncertainty approximately at the 150-point
+redemption threshold (roll~$\sim$38): by the time a casual player
+reaches their exit point, the question of whether they were ``lucky''
+has been substantially answered. For skin-seekers, a cap of 30 means
+the max prize costs \pounds80 rather than \pounds213 --- the
+guaranteed outcome is delivered within a spend comparable to what
+casual players already accept.
 
 At cap~40, the window is 32 rolls wide (rolls 18--49), still
 resolving within a reasonable horizon. The cost to reach the pity
-guarantee is \pounds107 --- comparable to the cost of reaching 150
-points naturally.
+guarantee is \pounds107 --- comparable to the casual player's
+spend at the 150-point threshold. Skin-seekers would pay roughly
+what casual players already pay, rather than more than double.
 
 Either of these configurations would preserve the consumer-facing
 function of the pity mechanic (protection against extreme bad luck)
 while substantially reducing its secondary function as a spending
-pressure tool. The player would still experience uncertainty --- this
-is inherent to any probabilistic system --- but that uncertainty would
-not be \emph{architecturally extended} to coincide with every
-spending decision they make during their session.
+pressure tool. Casual players would still experience uncertainty ---
+this is inherent to any probabilistic system --- but that uncertainty
+would not be \emph{architecturally extended} to coincide with every
+spending decision they make during their session. Skin-seekers would
+face a price proportional to the game's natural economy rather than
+one inflated by 79 additional anxious rolls.
 
 
 % ======================================================================
@@ -559,12 +720,14 @@ spending decision they make during their session.
 
 Several limitations should be noted.
 
-First, the analysis models a ``typical'' player stopping at
-approximately 150 expected points. Real player behaviour is
-heterogeneous: some stop earlier, some pursue the pity cap, and
-whale spending patterns differ qualitatively. Modelling a
-distribution of player types and their interaction with the
-uncertainty window would strengthen the conclusions.
+First, the analysis identifies two player archetypes --- casual
+players who exit at the 150-point redemption threshold and
+skin-seekers who commit to the pity cap --- but real player
+behaviour is a continuum. Some players stop before 150 points,
+others fall between the two archetypes, and whale spending
+patterns differ qualitatively. Modelling a distribution of player
+types and their interaction with the uncertainty window would
+strengthen the conclusions.
 
 Second, the psychological mechanisms described --- sunk cost,
 near-miss framing, discrete invisibility --- are inferred from the
@@ -574,10 +737,16 @@ the \emph{conditions} for these effects exist; it does not prove
 that players experience them as described.
 
 Third, the model treats each roll as an independent spending
-decision. In practice, players often purchase RP in bulk and may
-pre-commit to a number of rolls before beginning. The relationship
-between the uncertainty window and actual spending behaviour depends
-on the granularity of purchase decisions.
+decision. In practice, players purchase RP in discrete packages and
+pre-commit to a batch of rolls. As shown in
+Section~\ref{sec:synthesis-packages}, this does not weaken the
+spending pressure argument --- the package granularity introduces a
+second layer of extraction by forcing overspend and creating
+residual balances. However, the analysis does not model how
+\emph{package boundary decisions} (``do I buy another package?'')
+interact with the uncertainty window. The psychological dynamics at
+these discrete purchase points may differ from the continuous-roll
+model assumed here.
 
 Fourth, only the S1 pity cap is varied. The S2 pity system (not
 explored here) introduces additional interactions that may modify the
@@ -611,15 +780,21 @@ properties:
 \end{enumerate}
 
 The cumulative effect --- discrete goalpost widening --- transforms a
-consumer protection mechanic into a spending optimisation tool. The
-cap at 80 rolls creates \pounds112 of sunk-cost distance beyond the
-natural stopping point, ensures that 83.5\% of players leave inside
-the uncertainty window, and achieves this through increments that are
-individually invisible.
+consumer protection mechanic into a spending optimisation tool that
+operates on both player archetypes simultaneously. For casual players
+(targeting the 150-point redemption threshold), the cap at 80 rolls
+creates \pounds112 of sunk-cost distance beyond their exit point and
+ensures that 83.5\% leave inside the uncertainty window. For
+skin-seekers (targeting the max prize), the cap sets the price of
+the guaranteed outcome at \pounds213 rather than the \pounds80--\pounds107
+it would cost at caps of 30--40 --- a surcharge applied entirely
+through the uncertainty window. In both cases, the extraction is
+achieved through increments that are individually invisible.
 
 The data suggests that a cap of 30--40 rolls would preserve the
 protective function of the pity system while resolving outcome
-uncertainty within the player's natural session. The difference
+uncertainty within the casual player's session and pricing the max
+prize proportionally to the game's natural economy. The difference
 between cap~40 and cap~80 is not player protection --- it is
 \pounds107 of additional spending pressure per player, applied
 through a mechanism that is statistically precise and psychologically
