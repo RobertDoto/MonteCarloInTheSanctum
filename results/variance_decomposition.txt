@@ -10,7 +10,7 @@ Run 0/7: Baseline (nothing fixed)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  19.59s
+  18.67s
 
   Median S1 transform: roll 80
   Median S2 completion: roll 65
@@ -24,7 +24,7 @@ Run 1/7: Fix S1 at roll 80
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  18.94s
+  19.47s
 
 ======================================================================
 Run 2/7: Fix S2 at roll 65
@@ -35,7 +35,7 @@ Run 2/7: Fix S2 at roll 65
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  19.91s
+  18.97s
 
 ======================================================================
 Run 3/7: Fix S3 (shared draws)
@@ -46,7 +46,7 @@ Run 3/7: Fix S3 (shared draws)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  19.00s
+  17.33s
 
 ======================================================================
 Run 4/7: Fix S1 + S2
@@ -57,7 +57,7 @@ Run 4/7: Fix S1 + S2
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  21.50s
+  17.76s
 
 ======================================================================
 Run 5/7: Fix S1 + S3
@@ -68,7 +68,7 @@ Run 5/7: Fix S1 + S3
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  17.98s
+  17.89s
 
 ======================================================================
 Run 6/7: Fix S2 + S3
@@ -79,7 +79,7 @@ Run 6/7: Fix S2 + S3
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  21.68s
+  18.37s
 
 ======================================================================
 Run 7/7: Fix everything
@@ -90,7 +90,7 @@ Run 7/7: Fix everything
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  18.83s
+  17.24s
 
 ======================================================================
 VERIFICATION
@@ -192,112 +192,112 @@ Running sensitivity sweep (reusing cached simulations where possible):
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-19.94s
+19.77s
   Fix S2@58 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.31s
+18.66s
   Fix S1@61+S2@58 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-22.40s
+18.93s
   Fix S1@61+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-19.06s
+18.03s
   Fix S2@58+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-19.92s
+19.13s
   Fix S1@61+S2@58+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.07s
+17.18s
   Fix S1@61+S2@65 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-22.14s
+17.64s
   Fix S1@61+S2@65+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.92s
+17.44s
   Fix S2@73 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.11s
+17.94s
   Fix S1@61+S2@73 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-23.05s
+18.92s
   Fix S2@73+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-19.70s
+19.41s
   Fix S1@61+S2@73+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.74s
+19.65s
   Fix S1@80+S2@58 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-19.64s
+19.30s
   Fix S1@80+S2@58+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-20.29s
+19.40s
   Fix S1@80+S2@73 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-21.08s
+19.38s
   Fix S1@80+S2@73+S3 ...   Backend: CuPy (GPU)
   Subset 1: 1 one-time + 1 permanent,  total p = 0.5000%
   Subset 2: 10 one-time + 1 permanent,  total p = 10.0000%
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-17.97s
+18.27s
 
 ======================================================================
 SENSITIVITY: Shapley % at Checkpoints by Fix-Point Choice

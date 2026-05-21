@@ -10,7 +10,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  23.57s
+  18.40s
   Median S1 trigger: roll 10
 
 ======================================================================
@@ -22,7 +22,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  24.20s
+  18.28s
   Median S1 trigger: roll 20
 
 ======================================================================
@@ -34,7 +34,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  20.54s
+  20.42s
   Median S1 trigger: roll 30
 
 ======================================================================
@@ -46,7 +46,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  19.89s
+  18.52s
   Median S1 trigger: roll 40
 
 ======================================================================
@@ -58,7 +58,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  19.67s
+  19.63s
   Median S1 trigger: roll 50
 
 ======================================================================
@@ -70,7 +70,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  23.37s
+  18.81s
   Median S1 trigger: roll 60
 
 ======================================================================
@@ -82,7 +82,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  24.40s
+  17.55s
   Median S1 trigger: roll 70
 
 ======================================================================
@@ -94,7 +94,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  25.34s
+  17.85s
   Median S1 trigger: roll 80
 
 ======================================================================
@@ -106,7 +106,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  22.25s
+  16.84s
 
 ======================================================================
 [Fix-S1 @ r20] Pity cap: 20 rolls
@@ -117,7 +117,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  18.71s
+  17.38s
 
 ======================================================================
 [Fix-S1 @ r30] Pity cap: 30 rolls
@@ -128,7 +128,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  17.59s
+  19.13s
 
 ======================================================================
 [Fix-S1 @ r40] Pity cap: 40 rolls
@@ -139,7 +139,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  21.00s
+  18.97s
 
 ======================================================================
 [Fix-S1 @ r50] Pity cap: 50 rolls
@@ -150,7 +150,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  25.42s
+  17.55s
 
 ======================================================================
 [Fix-S1 @ r60] Pity cap: 60 rolls
@@ -161,7 +161,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  23.21s
+  17.57s
 
 ======================================================================
 [Fix-S1 @ r70] Pity cap: 70 rolls
@@ -172,7 +172,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  20.75s
+  17.84s
 
 ======================================================================
 [Fix-S1 @ r80] Pity cap: 80 rolls
@@ -183,7 +183,7 @@ GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9 GB VRAM)
   Subset 3: 5 permanent + 263 emotes + 474 icons = 742 items,  total p = 89.5000%
   Roll 500/1000...
   Roll 1000/1000...
-  20.95s
+  19.45s
 
 
 
@@ -248,32 +248,31 @@ RP PRICING: Real-World Cost of Rolling
 
      Package      GBP     GBP/RP    Rolls   GBP/roll
   --------------------------------------------------
-       575 RP    4.49    0.0078      1.4      3.12
-      1450 RP   10.99    0.0076      3.6      3.03
-      2850 RP   20.99    0.0074      7.1      2.95
-      5000 RP   34.99    0.0070     12.5      2.80
-      7250 RP   49.99    0.0069     18.1      2.76
-     15000 RP   99.99    0.0067     37.5      2.67
-
-  Best value:  2.67/roll (largest package)
-  Worst value: 3.12/roll (smallest package)
+       575 RP    4.50    0.0078     1.44      3.13
+      1380 RP   10.25    0.0074     3.45      2.97
+      2800 RP   19.99    0.0071     7.00      2.86
+      4500 RP   31.50    0.0070    11.25      2.80
+      6500 RP   44.99    0.0069    16.25      2.77
+     13500 RP   88.99    0.0066    33.75      2.64
+     33500 RP  220.00    0.0066    83.75      2.63
+     60200 RP  385.00    0.0064   150.50      2.56
 
 
 ======================================================================
 COST TO TARGET: GBP to Reach Point Milestones by Pity Cap
 ======================================================================
-  Based on best-value pricing (2.67/roll).
+  Based on optimal package combination.
 
      Cap     50 pts    100 pts    150 pts    Pity cost
   ------------------------------------------------
-      10     37.33     53.33     53.33       26.66
-      20     34.66     69.33    101.32       53.33
-      30     34.66     66.66    101.32       79.99
-      40     34.66     66.66    101.32      106.66
-      50     34.66     66.66    101.32      133.32
-      60     34.66     66.66    101.32      159.98
-      70     34.66     66.66    101.32      186.65
-      80     34.66     66.66    101.32      213.31
+      10     39.98     58.49     58.49       30.24
+      20     39.24     73.98    102.49       58.49
+      30     39.24     71.48    102.49       84.97
+      40     39.24     71.48    102.49      108.24
+      50     39.24     71.48    102.49      133.98
+      60     39.24     71.48    102.49      164.22
+      70     39.24     71.48    102.49      186.98
+      80     39.24     71.48    102.49      213.98
 
 
 ======================================================================
@@ -282,19 +281,18 @@ MARGINAL SPEND: Extra GBP per 10-Roll Cap Increase
 If a player is persuaded to roll through the entire uncertainty window,
 how much extra do they spend for each 10-roll cap increase?
 
-        Change  Extra rolls    Best case   Worst case
-  ----------------------------------------------------
-        10->20           +6       16.00       18.74
-        20->30          +14       37.33       43.73
-        30->40          +12       32.00       37.48
-        40->50          +11       29.33       34.36
-        50->60          +12       32.00       37.48
-        60->70          +11       29.33       34.36
-        70->80          +13       34.66       40.61
+        Change  Extra rolls      DP cost
+  ----------------------------------------
+        10->20           +6       19.25
+        20->30          +14       39.98
+        30->40          +12       36.00
+        40->50          +11       31.50
+        50->60          +12       36.00
+        60->70          +11       31.50
+        70->80          +13       39.24
 
   Total extra anxious rolls (cap 10->80): 79
-  Total extra spend (best):  210.65
-  Total extra spend (worst): 246.75
+  Total extra spend (DP optimal): £212.72
 
 
 ======================================================================
@@ -308,13 +306,13 @@ SYNTHESIS: THE DISCRETE GOALPOST WIDENING EFFECT
 
   THE MONETISATION REALITY:
 
-  At 400 RP per roll and best-value pricing (2.67/roll):
-    - Reaching 150 pts (roll ~38):  ~101.32
-    - Reaching the pity cap (roll 80):   ~213.31
-    - Gap (the sunk-cost trap):       ~111.99
+  At 400 RP per roll (optimal package combination):
+    - Reaching 150 pts (roll ~38):  ~102.49
+    - Reaching the pity cap (roll 80):   ~213.98
+    - Gap (the sunk-cost trap):       ~111.49
 
-  A player at 150 points has spent ~101.32. The pity guarantee
-  is another ~111.99 away. This gap is the monetisation sweet
+  A player at 150 points has spent ~102.49. The pity guarantee
+  is another ~111.49 away. This gap is the monetisation sweet
   spot: large enough to extract significant additional spend, but framed as
   "finishing what you started" rather than a new purchase.
 
@@ -338,8 +336,7 @@ SYNTHESIS: THE DISCRETE GOALPOST WIDENING EFFECT
   1. SUNK COST ANCHOR: "I'm already 38 rolls in, and the guarantee is at
      80. I'm 42 rolls away from a sure thing." This reframes
      stopping as a loss rather than a natural endpoint. The gap represents
-     ~111.99 of additional spend at best-value pricing,
-     or ~131.19 at worst-value.
+     ~111.49 of additional spend (optimal package combination).
 
   2. NEAR-MISS FRAMING: With only 16.5% triggering S1 by the typical
      stop, most players feel they "almost" got lucky. A lower cap would
@@ -349,7 +346,7 @@ SYNTHESIS: THE DISCRETE GOALPOST WIDENING EFFECT
      number of anxious rolls (see marginal table above). No single change
      feels dramatic, but the cumulative effect from cap=10 to cap=80
      is substantial -- 79 extra anxious rolls worth
-     210.65-246.75 in potential spend.
+     £212.72 in potential spend.
 
   The interaction effects from the variance decomposition confirm that S1
   timing acts nearly independently of S2 and S3 (all interactions <1.5% of

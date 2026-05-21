@@ -19,7 +19,9 @@ master/
 │   ├── validity_testing.py         Statistical tests comparing CPU vs GPU output
 │   ├── variance_decomposition.py   Shapley-value variance attribution, interaction effects, sensitivity sweep
 │   ├── pity_cap_analysis.py        Pity cap sweep — cost-to-target in rolls and GBP
-│   └── pity_cap_synthesis.py       Connects variance and pity cap findings via spending pressure
+│   ├── pity_cap_synthesis.py       Connects variance and pity cap findings via spending pressure
+│   ├── costs.py                    Shared DP module — minimum GBP cost for any RP total (unbounded knapsack)
+│   └── planner.py                  Interactive CLI — rolls→points or points→rolls with cost estimates
 ├── plots/
 │   ├── plot_generation.py          Generates all visualisations from saved results
 │   └── *.png                       Pre-generated plots
@@ -58,10 +60,10 @@ pip install -r requirements.txt
 For NVIDIA GPUs, install [CuPy](https://cupy.dev/) matching your CUDA version:
 
 ```
-pip install cupy-cuda12x
+pip install cupy-cuda12x   # replace 12x with your CUDA version
 ```
 
-Replace `12x` with your CUDA version (e.g. `cupy-cuda11x`). The simulator auto-detects GPU availability and uses it when present.
+See the [CuPy installation guide](https://docs.cupy.dev/en/stable/install.html) for the correct package for your CUDA toolkit. The simulator auto-detects GPU availability and uses it when present.
 
 ## Usage
 
@@ -131,6 +133,19 @@ Connects the variance decomposition and pity cap analyses through a psychologica
 - **Marginal extraction:** additional GBP spend per 10-roll cap increment (DP-optimal package combination)
 
 Produces three plots in `plots/` (`synthesis_variance_share.png`, `synthesis_combined.png`, `synthesis_marginal_anxious.png`) and saves console output to `results/pity_cap_synthesis.txt`.
+
+### Roll planner
+
+```
+python analysis/planner.py
+```
+
+Interactive CLI for planning rolls or reverse-engineering a points target. Requires `results/simulation_results.csv` (produced by `expected_points.py`). Prompts for a mode:
+
+- **(R) Rolls → Points** — enter a roll count, get expected cumulative points at nine luck tiers (p1 through p99) with DP-optimal GBP cost
+- **(P) Points → Rolls** — enter a points target, get the rolls needed at each tier with cost estimates
+
+Costs are calculated by `costs.py` using an unbounded-knapsack DP over the eight available RP packages to find the minimum spend for any roll count.
 
 ## OCR Data Pipeline
 
