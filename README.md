@@ -113,7 +113,7 @@ Sweeps the S1 pity cap across values [10, 20, 30, ..., 80] and measures the impa
 
 - Mean/median points at checkpoint rolls
 - Rolls required to reach point targets (50, 100, 150, 200, 300, 500)
-- GBP cost to each target using real RP pricing (400 RP per roll, best value £2.67/roll)
+- GBP cost to each target using real RP pricing (400 RP per roll, DP-optimal package combination)
 - Marginal impact of each 10-roll cap reduction
 
 Produces three plots in `plots/` (`pity_cap_mean_points.png`, `pity_cap_rolls_to_target.png`, `pity_cap_marginal_value.png`) and saves console output to `results/pity_cap_analysis.txt`.
@@ -128,7 +128,7 @@ Connects the variance decomposition and pity cap analyses through a psychologica
 
 - **Uncertainty window:** the range of rolls where S1 timing accounts for >30% of total variance — the "anxious zone" where players don't know if they'll get lucky
 - **Spending pressure:** how many anxious rolls a player experiences before reaching common point targets
-- **Marginal extraction:** additional GBP spend per 10-roll cap increment (~£30 per step at best-value pricing)
+- **Marginal extraction:** additional GBP spend per 10-roll cap increment (DP-optimal package combination)
 
 Produces three plots in `plots/` (`synthesis_variance_share.png`, `synthesis_combined.png`, `synthesis_marginal_anxious.png`) and saves console output to `results/pity_cap_synthesis.txt`.
 

@@ -42,6 +42,7 @@ _PROJECT_ROOT = os.path.dirname(_SCRIPT_DIR)
 
 sys.path.insert(0, _SCRIPT_DIR)
 from expected_points import parse_data, simulate, prompt_backend
+from costs import roll_cost
 
 # ==========================================================================
 #  CONFIGURATION
@@ -74,18 +75,8 @@ CHECKPOINTS = [10, 20, 30, 50, 80, 100, 250]
 # Centred around the realistic ~150 point stopping point.
 POINT_TARGETS = [50, 100, 150, 200, 300, 500]
 
-# RP pricing (400 RP per roll).
+# RP pricing: costs computed via optimal package DP (see costs.py).
 RP_COST_PER_ROLL = 400
-RP_PACKAGES = [
-    (575,   4.49),
-    (1450,  10.99),
-    (2850,  20.99),
-    (5000,  34.99),
-    (7250,  49.99),
-    (15000, 99.99),
-]
-BEST_GBP_PER_RP = RP_PACKAGES[-1][1] / RP_PACKAGES[-1][0]
-BEST_GBP_PER_ROLL = BEST_GBP_PER_RP * RP_COST_PER_ROLL
 
 # Percentile indices in the results (matching expected_points.py output).
 # percentiles = [1, 5, 10, 25, 50, 75, 90, 95, 99]
@@ -195,8 +186,8 @@ for cap in PITY_CAPS:
             row += f" {'>' + str(MAX_ROLLS):>11}"
     print(row)
 
-# Same table but in GBP (best-value pricing).
-print(f"\n  Cost in GBP (best-value: {BEST_GBP_PER_ROLL:.2f}/roll):\n")
+# Same table but in GBP (DP-optimal package combination).
+print(f"\n  Cost in GBP (optimal package combination):\n")
 
 header = f"  {'Cap':>6}"
 for target in POINT_TARGETS:
@@ -209,10 +200,10 @@ for cap in PITY_CAPS:
     for target in POINT_TARGETS:
         roll = find_target_roll(medians[cap], target)
         if roll is not None:
-            cost = roll * BEST_GBP_PER_ROLL
+            cost = roll_cost(roll)
             row += f" {cost:>10.2f}"
         else:
-            row += f" {'>' + f'{MAX_ROLLS * BEST_GBP_PER_ROLL:.0f}':>10}"
+            row += f" {'>' + f'{roll_cost(MAX_ROLLS):.0f}':>10}"
     print(row)
 
 

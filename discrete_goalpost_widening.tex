@@ -53,11 +53,10 @@
     guarantee by their exit point; the cap functions as a
     psychological anchor rather than a practical mechanic. For
     skin-seekers, the cap sets the price of the guaranteed outcome
-    at \pounds213 rather than the \pounds80--\pounds107 it would
+    at \pounds214 rather than the \pounds85--\pounds108 it would
     cost at caps of 30--40. The cumulative effect of widening the
     cap from 10 to 80 rolls generates 79 additional anxious rolls,
-    representing \pounds210--\pounds247 in potential additional spend
-    per player.
+    representing \pounds213 in potential additional spend per player.
 \end{abstract}
 
 \tableofcontents
@@ -294,11 +293,11 @@ Cap & Roll 10 & Roll 20 & Roll 30 & Roll 50 & Roll 80 & Roll 100 \\
 \noindent Players fall into two broad categories. \emph{Skin-seekers}
 enter the system aiming for the S1 max prize (the Viego skin),
 which requires reaching the pity cap at roll~80 --- a cost of
-\pounds213.31 at best-value pricing (\pounds2.67/roll).
+\pounds213.98 using an optimal package combination.
 \emph{Casual players} engage without committing to the full pity
 distance and typically accumulate around 150 expected points
-(roll~$\sim$38, \pounds101.32) before stopping. The gap between
-these two endpoints --- \pounds111.99 --- defines the
+(roll~$\sim$38, \pounds102.49) before stopping. The gap between
+these two endpoints --- \pounds111.49 --- defines the
 \emph{sunk-cost trap} for casual players who did not initially
 intend to reach pity but find themselves anchored by prior spend.
 
@@ -307,18 +306,17 @@ milestones, with GBP equivalents.
 
 \begin{table}[H]
 \centering
-\caption{Median rolls to reach point targets, with best-value GBP
-cost (\pounds2.67/roll).}
+\caption{Median rolls to reach point targets, with DP-optimal purchase cost.}
 \label{tab:rolls-to-target}
 \begin{tabular}{r r r r r r r}
 \toprule
 Cap & 50\,pts & 100\,pts & 150\,pts & 200\,pts & 300\,pts & 500\,pts \\
 \midrule
-10 & 14 (\pounds37)  & 20 (\pounds53)  & 20 (\pounds53)   & 20 (\pounds53)   & 20 (\pounds53)   & 30 (\pounds80)  \\
-20 & 13 (\pounds35)  & 26 (\pounds69)  & 38 (\pounds101)  & 40 (\pounds107)  & 40 (\pounds107)  & 56 (\pounds149) \\
-30 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 49 (\pounds131)  & 60 (\pounds160)  & 60 (\pounds160) \\
-40 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 50 (\pounds133)  & 67 (\pounds179)  & 80 (\pounds213) \\
-80 & 13 (\pounds35)  & 25 (\pounds67)  & 38 (\pounds101)  & 50 (\pounds133)  & 68 (\pounds181)  & 91 (\pounds243) \\
+10 & 14 (\pounds40)  & 20 (\pounds58)  & 20 (\pounds58)   & 20 (\pounds58)   & 20 (\pounds58)   & 30 (\pounds85)  \\
+20 & 13 (\pounds39)  & 26 (\pounds74)  & 38 (\pounds102)  & 40 (\pounds108)  & 40 (\pounds108)  & 56 (\pounds152) \\
+30 & 13 (\pounds39)  & 25 (\pounds71)  & 38 (\pounds102)  & 49 (\pounds133)  & 60 (\pounds164)  & 60 (\pounds164) \\
+40 & 13 (\pounds39)  & 25 (\pounds71)  & 38 (\pounds102)  & 50 (\pounds134)  & 67 (\pounds178)  & 80 (\pounds214) \\
+80 & 13 (\pounds39)  & 25 (\pounds71)  & 38 (\pounds102)  & 50 (\pounds134)  & 68 (\pounds182)  & 91 (\pounds244) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -392,31 +390,31 @@ Each 10-roll cap increment extends the window by 11--14 rolls:
 \begin{table}[H]
 \centering
 \caption{Marginal impact of each 10-roll cap increase on the
-uncertainty window, with associated spending potential.}
+uncertainty window, with DP-optimal purchase cost for those extra rolls.}
 \label{tab:marginal}
 \begin{tabular}{r r r r r}
 \toprule
 Change & Old width & New width & $\Delta$ rolls &
 Extra spend (\pounds) \\
 \midrule
-$10 \to 20$ & 0  & 6  & $+6$  & 16.00 -- 18.74 \\
-$20 \to 30$ & 6  & 20 & $+14$ & 37.33 -- 43.73 \\
-$30 \to 40$ & 20 & 32 & $+12$ & 32.00 -- 37.48 \\
-$40 \to 50$ & 32 & 43 & $+11$ & 29.33 -- 34.36 \\
-$50 \to 60$ & 43 & 55 & $+12$ & 32.00 -- 37.48 \\
-$60 \to 70$ & 55 & 66 & $+11$ & 29.33 -- 34.36 \\
-$70 \to 80$ & 66 & 79 & $+13$ & 34.66 -- 40.61 \\
+$10 \to 20$ & 0  & 6  & $+6$  & 19.25 \\
+$20 \to 30$ & 6  & 20 & $+14$ & 39.98 \\
+$30 \to 40$ & 20 & 32 & $+12$ & 36.00 \\
+$40 \to 50$ & 32 & 43 & $+11$ & 31.50 \\
+$50 \to 60$ & 43 & 55 & $+12$ & 36.00 \\
+$60 \to 70$ & 55 & 66 & $+11$ & 31.50 \\
+$70 \to 80$ & 66 & 79 & $+13$ & 39.24 \\
 \midrule
 \textbf{Total} & & & \textbf{$+79$} &
-\textbf{210.65 -- 246.75} \\
+\textbf{212.72} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \noindent No single increment exceeds 14 rolls. Each change, viewed
 in isolation, appears modest. The cumulative effect is an expansion
-of 79 anxious rolls representing \pounds210--\pounds247 in potential
-additional spend per player.
+of 79 anxious rolls representing \pounds212.72 in potential additional
+spend per player.
 
 % --- Figure: Variance share by cap ---
 % \begin{figure}[H]
@@ -463,18 +461,18 @@ parts.
 \subsection{The Monetisation Geometry}
 \label{sec:synthesis-geometry}
 
-At 400~RP per roll and best-value pricing (\pounds2.67/roll), two
+At 400~RP per roll, using optimal package combinations, two
 distinct spending trajectories emerge:
 
 \begin{itemize}[nosep]
     \item \textbf{Skin-seekers} target the S1 pity guarantee and
-          budget for roll~80: \pounds213.31. This is their
+          budget for roll~80: \pounds213.98. This is their
           \emph{intended} spend from the outset.
     \item \textbf{Casual players} accumulate $\sim$150 points by
-          roll~$\sim$38: \pounds101.32. At this threshold the
+          roll~$\sim$38: \pounds102.49. At this threshold the
           accumulated points can be redeemed for a specific reward
           outside the loot system, providing a natural exit point.
-    \item The gap between these endpoints: \pounds111.99.
+    \item The gap between these endpoints: \pounds111.49.
 \end{itemize}
 
 For \textbf{casual players}, the gap is the monetisation sweet spot:
@@ -490,11 +488,11 @@ These players enter the system already committed to reaching the
 pity cap. The uncertainty window does not need to \emph{trick} them
 into spending more --- they have already accepted the full cost. Instead,
 the cap's function is to \emph{set the price}: an 80-roll cap means
-\pounds213 rather than the \pounds80--\pounds107 it would cost at
+\pounds214 rather than the \pounds85--\pounds108 it would cost at
 caps of 30--40. The discrete goalpost widening effect determines
 \emph{how much} the skin costs, not whether the player pursues it.
-A player who would have paid \pounds80 for the skin at cap~30 must
-now pay \pounds213 for the identical outcome at cap~80.
+A player who would have paid \pounds85 for the skin at cap~30 must
+now pay \pounds214 for the identical outcome at cap~80.
 
 
 \subsection{Package Granularity and Forced Overspend}
@@ -506,19 +504,21 @@ store. Table~\ref{tab:packages} lists the available packages.
 
 \begin{table}[H]
 \centering
-\caption{RP packages with effective rolls per package. No package
-yields a whole number of rolls (400~RP each).}
+\caption{RP packages with effective rolls per package. Only the
+2{,}800~RP package yields a whole number of rolls (400~RP each).}
 \label{tab:packages}
 \begin{tabular}{r r r r}
 \toprule
 RP & GBP & Rolls covered & GBP/roll \\
 \midrule
-575    & \pounds4.49  & 1.44 & \pounds3.12 \\
-1{,}450  & \pounds10.99 & 3.63 & \pounds3.03 \\
-2{,}850  & \pounds20.99 & 7.13 & \pounds2.95 \\
-5{,}000  & \pounds34.99 & 12.50 & \pounds2.80 \\
-7{,}250  & \pounds49.99 & 18.13 & \pounds2.76 \\
-15{,}000 & \pounds99.99 & 37.50 & \pounds2.67 \\
+575      & \pounds4.50   & 1.44  & \pounds3.13 \\
+1{,}380  & \pounds10.25  & 3.45  & \pounds2.97 \\
+2{,}800  & \pounds19.99  & 7.00  & \pounds2.86 \\
+4{,}500  & \pounds31.50  & 11.25 & \pounds2.80 \\
+6{,}500  & \pounds44.99  & 16.25 & \pounds2.77 \\
+13{,}500 & \pounds88.99  & 33.75 & \pounds2.64 \\
+33{,}500 & \pounds220.00 & 83.75 & \pounds2.63 \\
+60{,}200 & \pounds385.00 & 150.50 & \pounds2.56 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -527,64 +527,64 @@ RP & GBP & Rolls covered & GBP/roll \\
 
 \subsubsection*{1. Fractional Roll Counts}
 
-Every package yields a fractional number of rolls. Division of each
-package size by the roll cost (400~RP) never produces an integer.
-This means that \emph{no single package purchase} can be exactly
-exhausted through rolling --- there is always a residual RP balance.
+Most packages yield a fractional number of rolls. Only the 2{,}800~RP
+package divides cleanly (7.00 rolls exactly). All others produce a
+fractional remainder, meaning that \emph{no single purchase of those
+packages} can be exactly exhausted through rolling --- there is always
+a residual RP balance.
 
-More critically, common combinations also fail to tile onto key roll
-milestones. Consider both player types:
+Even with an optimal combination chosen by the DP algorithm, achieving
+a specific roll target still requires overspending slightly. Consider
+both player types:
 
 \textbf{Casual player} targeting 150 points ($\sim$38 rolls =
 15{,}200~RP):
 
 \begin{itemize}[nosep]
-    \item $1 \times 15{,}000$ RP (\pounds99.99): 200~RP short ---
-          requires a top-up purchase. The cheapest option (575~RP,
-          \pounds4.49) leaves 375~RP residual, totalling \pounds104.48
-          for 38 usable rolls.
-    \item $2 \times 7{,}250$ RP (\pounds99.98): yields 14{,}500~RP,
-          still 700~RP short. A third package is required.
-    \item $7{,}250 + 5{,}000 + 2{,}850$ RP (\pounds105.97): yields
-          15{,}100~RP, still 100~RP short of roll~38.
+    \item Optimal combination: $1 \times 13{,}500$ RP (\pounds88.99)
+          $+ 3 \times 575$ RP (\pounds13.50) = 15{,}225~RP ---
+          25~RP surplus --- total \pounds102.49.
+    \item Alternative: $1 \times 13{,}500 + 1 \times 1{,}380 +
+          1 \times 575$ RP (\pounds103.74): yields 15{,}455~RP ---
+          255~RP surplus, \pounds1.25 more expensive.
 \end{itemize}
 
 \textbf{Skin-seeker} targeting the pity cap (80 rolls = 32{,}000~RP):
 
 \begin{itemize}[nosep]
-    \item $2 \times 15{,}000$ RP (\pounds199.98): yields 30{,}000~RP
-          --- 2{,}000~RP (5 rolls) short. Requires a third package.
-    \item $2 \times 15{,}000 + 2{,}850$ RP (\pounds220.97): yields
-          32{,}850~RP --- 850~RP surplus (2.1 wasted rolls).
-    \item $15{,}000 + 7{,}250 + 5{,}000 + 5{,}000$ RP (\pounds219.96):
-          yields 32{,}250~RP --- 250~RP surplus.
+    \item Optimal combination: $2 \times 13{,}500$ RP (\pounds177.98)
+          $+ 1 \times 4{,}500$ RP (\pounds31.50) $+ 1 \times 575$ RP
+          (\pounds4.50) = 32{,}075~RP --- 75~RP surplus ---
+          total \pounds213.98.
+    \item Alternative: $1 \times 33{,}500$ RP (\pounds220.00):
+          yields 33{,}500~RP --- 1{,}500~RP (3.75 rolls) surplus,
+          \pounds6.02 more expensive.
 \end{itemize}
 
-\noindent In neither case can the player purchase exactly the RP
-they need. The casual player is forced into a top-up that creates
-residual RP --- a \emph{re-engagement hook} that feels wasteful to
-abandon. The skin-seeker, despite committing to the largest
-purchase in the system, must still overspend by \pounds7--\pounds21
-beyond the idealised \pounds213 cost, and is left with surplus RP
-that nudges toward further rolling.
+\noindent Even the optimal purchase produces residual RP --- a
+\emph{re-engagement hook} that feels wasteful to abandon. The casual
+player's 25~RP surplus and the skin-seeker's 75~RP surplus are each
+insufficient for even one additional roll (which costs 400~RP), yet
+both create a balance that nudges toward a further top-up purchase.
 
 \subsubsection*{2. Non-Uniform Increments}
 
-The package sizes (575, 1{,}450, 2{,}850, 5{,}000, 7{,}250,
-15{,}000) are not multiples of a common base. If packages were sold
-in clean multiples of 400~RP --- or even in round thousands --- a
-player could calculate exactly how many rolls they were buying and
-purchase accordingly. Instead, the irregular increments introduce a
+The package sizes (575, 1{,}380, 2{,}800, 4{,}500, 6{,}500,
+13{,}500, 33{,}500, 60{,}200) are not multiples of a common base.
+If packages were sold in clean multiples of 400~RP, a player could
+calculate exactly how many rolls they were buying and purchase
+accordingly. Instead, the irregular increments introduce a
 \emph{currency obfuscation layer}: the conversion from pounds to RP
 to rolls requires mental arithmetic that most players will
 approximate rather than compute precisely.
 
 This approximation systematically favours the house. A player who
-reasons ``I need about 15{,}000~RP, the big package covers that''
-is implicitly accepting a 200~RP shortfall. A player who reasons
-``two medium packages should be enough'' (14{,}500~RP) is 700~RP
-short. In both cases, the player either stops short of their target
-or buys an additional package that mostly goes to waste.
+reasons ``the 13{,}500~RP package should cover 38 rolls'' is
+200~RP short (13{,}500 $<$ 15{,}200). A player who guesses
+``two 6{,}500~RP packages'' has 13{,}000~RP --- still 2{,}200~RP
+short of 38 rolls. In both cases, the player either stops short of
+their target or buys an additional package, generating surplus RP
+that seeds further spending.
 
 \subsubsection*{Interaction with the Pity Cap}
 
@@ -603,13 +603,11 @@ waste. Together, they create a two-layer extraction mechanism:
 \end{enumerate}
 
 \noindent This interaction means that the real cost of engaging with
-the system is consistently higher than the idealised best-value
-figures used elsewhere in this paper. The \pounds101.32 cost for a
-casual player to reach the 150-point redemption threshold assumes
-perfect RP efficiency; the actual purchase cost is
-\pounds104.48--\pounds105.97. For skin-seekers targeting the pity
-cap, the idealised \pounds213.31 becomes \pounds219.96--\pounds220.97
-in practice. In both cases, residual RP either goes unused or seeds
+the system always involves some overspend beyond the exact RP
+required. Even with optimal package selection, the casual player
+pays \pounds102.49 for 15{,}225~RP when they need 15{,}200~RP, and
+the skin-seeker pays \pounds213.98 for 32{,}075~RP when they need
+32{,}000~RP. In both cases, residual RP either goes unused or seeds
 further spending.
 
 
@@ -622,15 +620,14 @@ For \textbf{casual players}, reaching 150 points (roll~38) creates
 a framing where they are 42 rolls away from a guaranteed outcome.
 Stopping is reframed as a \emph{loss} --- walking away from a
 ``sure thing'' --- rather than a natural endpoint. The gap
-represents \pounds112--\pounds131 of additional spend, depending on
-RP package pricing.
+represents \pounds111.49 of additional spend at optimal pricing.
 
 For \textbf{skin-seekers}, the sunk cost operates in reverse:
-having committed to the \pounds213+ spend from the start, they are
+having committed to the \pounds213.98 spend from the start, they are
 anchored to completing all 80 rolls regardless of intermediate
 outcomes. A skin-seeker who triggers S1 naturally at roll~30 has
 ``wasted'' their remaining budget headroom, but a skin-seeker at
-roll~60 without S1 has already spent \pounds160 and faces the
+roll~60 without S1 has already spent \pounds164.22 and faces the
 classic sunk-cost compulsion to continue.
 
 \subsubsection*{2. Near-Miss Framing}
@@ -655,10 +652,10 @@ entire journey in a state of manufactured near-miss anticipation.
 
 Each 10-roll cap increase adds only 11--14 anxious rolls. No single
 change feels dramatic. A designer moving the cap from 40 to 50 adds
-11 rolls of uncertainty --- approximately \pounds29--\pounds34 in
-potential spend --- an increment that would be difficult for players
-to perceive, let alone protest. But the cumulative effect from cap~10
-to cap~80 is 79 extra anxious rolls worth \pounds211--\pounds247.
+11 rolls of uncertainty --- approximately \pounds31.50 in potential
+spend --- an increment that would be difficult for players to
+perceive, let alone protest. But the cumulative effect from cap~10
+to cap~80 is 79 extra anxious rolls worth \pounds212.72.
 
 This is the core of the discrete goalpost widening effect: a series
 of individually invisible adjustments that, in aggregate, reshape the
@@ -692,13 +689,13 @@ the resolution of outcome uncertainty approximately at the 150-point
 redemption threshold (roll~$\sim$38): by the time a casual player
 reaches their exit point, the question of whether they were ``lucky''
 has been substantially answered. For skin-seekers, a cap of 30 means
-the max prize costs \pounds80 rather than \pounds213 --- the
+the max prize costs \pounds84.97 rather than \pounds213.98 --- the
 guaranteed outcome is delivered within a spend comparable to what
 casual players already accept.
 
 At cap~40, the window is 32 rolls wide (rolls 18--49), still
 resolving within a reasonable horizon. The cost to reach the pity
-guarantee is \pounds107 --- comparable to the casual player's
+guarantee is \pounds108.24 --- comparable to the casual player's
 spend at the 150-point threshold. Skin-seekers would pay roughly
 what casual players already pay, rather than more than double.
 
@@ -783,10 +780,10 @@ The cumulative effect --- discrete goalpost widening --- transforms a
 consumer protection mechanic into a spending optimisation tool that
 operates on both player archetypes simultaneously. For casual players
 (targeting the 150-point redemption threshold), the cap at 80 rolls
-creates \pounds112 of sunk-cost distance beyond their exit point and
+creates \pounds111.49 of sunk-cost distance beyond their exit point and
 ensures that 83.5\% leave inside the uncertainty window. For
 skin-seekers (targeting the max prize), the cap sets the price of
-the guaranteed outcome at \pounds213 rather than the \pounds80--\pounds107
+the guaranteed outcome at \pounds213.98 rather than the \pounds84.97--\pounds108.24
 it would cost at caps of 30--40 --- a surcharge applied entirely
 through the uncertainty window. In both cases, the extraction is
 achieved through increments that are individually invisible.
@@ -796,7 +793,7 @@ protective function of the pity system while resolving outcome
 uncertainty within the casual player's session and pricing the max
 prize proportionally to the game's natural economy. The difference
 between cap~40 and cap~80 is not player protection --- it is
-\pounds107 of additional spending pressure per player, applied
+\pounds105.74 of additional spending pressure per player, applied
 through a mechanism that is statistically precise and psychologically
 difficult to perceive.
 

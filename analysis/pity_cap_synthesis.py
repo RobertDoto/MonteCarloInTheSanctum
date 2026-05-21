@@ -68,6 +68,7 @@ _PROJECT_ROOT = os.path.dirname(_SCRIPT_DIR)
 
 sys.path.insert(0, _SCRIPT_DIR)
 from expected_points import parse_data, simulate, prompt_backend
+from costs import roll_cost, PACKAGES, RP_PER_ROLL
 
 
 def find_percentile_roll(prob_curve, percentile=0.50):
@@ -107,22 +108,7 @@ PITY_CAPS = [10, 20, 30, 40, 50, 60, 70, 80]
 CHECKPOINTS = [10, 20, 30, 50, 80]
 POINT_TARGETS = [50, 100, 150]
 
-# RP pricing and roll costs.
-RP_COST_PER_ROLL = 400
-RP_PACKAGES = [
-    (575,   4.49),
-    (1450,  10.99),
-    (2850,  20.99),
-    (5000,  34.99),
-    (7250,  49.99),
-    (15000, 99.99),
-]
-# Best-value cost per roll (largest package).
-BEST_GBP_PER_RP = RP_PACKAGES[-1][1] / RP_PACKAGES[-1][0]
-BEST_GBP_PER_ROLL = BEST_GBP_PER_RP * RP_COST_PER_ROLL
-# Worst-value (smallest package).
-WORST_GBP_PER_RP = RP_PACKAGES[0][1] / RP_PACKAGES[0][0]
-WORST_GBP_PER_ROLL = WORST_GBP_PER_RP * RP_COST_PER_ROLL
+# RP pricing: costs computed via optimal package DP (see costs.py).
 
 # Threshold for defining the "uncertainty window" (S1 variance share).
 UNCERTAINTY_THRESHOLD = 0.30  # 30%
@@ -359,19 +345,16 @@ for i in range(len(PITY_CAPS) - 1):
 print(f"\n\n{'=' * 70}")
 print("RP PRICING: Real-World Cost of Rolling")
 print("=" * 70)
-print(f"  Each roll costs {RP_COST_PER_ROLL} RP.\n")
+print(f"  Each roll costs {RP_PER_ROLL} RP.\n")
 
 print(f"  {'Package':>10} {'GBP':>8} {'GBP/RP':>10} {'Rolls':>8} {'GBP/roll':>10}")
 print(f"  {'-'*50}")
 
-for rp, gbp in RP_PACKAGES:
+for rp, gbp in PACKAGES:
     gbp_per_rp = gbp / rp
-    n_rolls = rp / RP_COST_PER_ROLL
-    gbp_per_roll = gbp_per_rp * RP_COST_PER_ROLL
-    print(f"  {rp:>8} RP {gbp:>7.2f} {gbp_per_rp:>9.4f} {n_rolls:>8.1f} {gbp_per_roll:>9.2f}")
-
-print(f"\n  Best value:  {BEST_GBP_PER_ROLL:.2f}/roll (largest package)")
-print(f"  Worst value: {WORST_GBP_PER_ROLL:.2f}/roll (smallest package)")
+    n_rolls = rp / RP_PER_ROLL
+    gbp_per_roll = gbp_per_rp * RP_PER_ROLL
+    print(f"  {rp:>8} RP {gbp:>7.2f} {gbp_per_rp:>9.4f} {n_rolls:>8.2f} {gbp_per_roll:>9.2f}")
 
 
 # ==========================================================================
@@ -381,7 +364,7 @@ print(f"  Worst value: {WORST_GBP_PER_ROLL:.2f}/roll (smallest package)")
 print(f"\n\n{'=' * 70}")
 print("COST TO TARGET: GBP to Reach Point Milestones by Pity Cap")
 print("=" * 70)
-print(f"  Based on best-value pricing ({BEST_GBP_PER_ROLL:.2f}/roll).\n")
+print(f"  Based on optimal package combination.\n")
 
 print(f"  {'Cap':>6}", end="")
 for target in POINT_TARGETS:
@@ -394,12 +377,12 @@ for cap in PITY_CAPS:
     for target in POINT_TARGETS:
         target_roll = find_target_roll(medians_pts[cap], target)
         if target_roll is not None:
-            cost = target_roll * BEST_GBP_PER_ROLL
+            cost = roll_cost(target_roll)
             row += f" {cost:>9.2f}"
         else:
-            row += f" {'>' + f'{MAX_ROLLS * BEST_GBP_PER_ROLL:.0f}':>9}"
+            row += f" {'>' + f'{roll_cost(MAX_ROLLS):.0f}':>9}"
     # Cost to reach the pity cap itself
-    pity_cost = cap * BEST_GBP_PER_ROLL
+    pity_cost = roll_cost(cap)
     row += f" {pity_cost:>11.2f}"
     print(row)
 
@@ -414,8 +397,8 @@ print("=" * 70)
 print("If a player is persuaded to roll through the entire uncertainty window,")
 print("how much extra do they spend for each 10-roll cap increase?\n")
 
-print(f"  {'Change':>12} {'Extra rolls':>12} {'Best case':>12} {'Worst case':>12}")
-print(f"  {'-'*52}")
+print(f"  {'Change':>12} {'Extra rolls':>12} {'DP cost':>12}")
+print(f"  {'-'*40}")
 
 total_extra_rolls_low_to_high = 0
 for i in range(len(PITY_CAPS) - 1):
@@ -427,18 +410,15 @@ for i in range(len(PITY_CAPS) - 1):
     delta = w_hi - w_lo
     total_extra_rolls_low_to_high += delta
 
-    best_cost = delta * BEST_GBP_PER_ROLL
-    worst_cost = delta * WORST_GBP_PER_ROLL
+    dp_cost = roll_cost(delta) if delta > 0 else 0.0
 
     print(f"  {str(cap_lo)+'->'+str(cap_hi):>12} {delta:>+12}"
-          f" {best_cost:>11.2f} {worst_cost:>11.2f}")
+          f" {dp_cost:>11.2f}")
 
 print(f"\n  Total extra anxious rolls (cap {PITY_CAPS[0]}->{PITY_CAPS[-1]}):"
       f" {total_extra_rolls_low_to_high}")
-print(f"  Total extra spend (best):  "
-      f"{total_extra_rolls_low_to_high * BEST_GBP_PER_ROLL:.2f}")
-print(f"  Total extra spend (worst): "
-      f"{total_extra_rolls_low_to_high * WORST_GBP_PER_ROLL:.2f}")
+print(f"  Total extra spend (DP optimal): "
+      f"£{roll_cost(total_extra_rolls_low_to_high):.2f}")
 
 
 # ==========================================================================
@@ -463,8 +443,8 @@ s1_prob_at_stop = np.array(baselines[cap_max]["s1_transform_prob"])
 s1_pct_at_stop = s1_prob_at_stop[stop_roll_80 - 1] if stop_roll_80 else 0
 
 # Cost to reach 150 pts and cost to reach pity cap.
-cost_to_150 = (stop_roll_80 or 0) * BEST_GBP_PER_ROLL
-cost_to_pity = cap_max * BEST_GBP_PER_ROLL
+cost_to_150 = roll_cost(stop_roll_80 or 0)
+cost_to_pity = roll_cost(cap_max)
 extra_cost_to_pity = cost_to_pity - cost_to_150
 
 print(f"""
@@ -475,7 +455,7 @@ print(f"""
 
   THE MONETISATION REALITY:
 
-  At {RP_COST_PER_ROLL} RP per roll and best-value pricing ({BEST_GBP_PER_ROLL:.2f}/roll):
+  At {RP_PER_ROLL} RP per roll (optimal package combination):
     - Reaching 150 pts (roll ~{stop_roll_80}):  ~{cost_to_150:.2f}
     - Reaching the pity cap (roll {cap_max}):   ~{cost_to_pity:.2f}
     - Gap (the sunk-cost trap):       ~{extra_cost_to_pity:.2f}
@@ -505,8 +485,7 @@ print(f"""
   1. SUNK COST ANCHOR: "I'm already {stop_roll_80 or '??'} rolls in, and the guarantee is at
      {cap_max}. I'm {cap_max - (stop_roll_80 or 0)} rolls away from a sure thing." This reframes
      stopping as a loss rather than a natural endpoint. The gap represents
-     ~{extra_cost_to_pity:.2f} of additional spend at best-value pricing,
-     or ~{(cap_max - (stop_roll_80 or 0)) * WORST_GBP_PER_ROLL:.2f} at worst-value.
+     ~{extra_cost_to_pity:.2f} of additional spend (optimal package combination).
 
   2. NEAR-MISS FRAMING: With only {s1_pct_at_stop:.1%} triggering S1 by the typical
      stop, most players feel they "almost" got lucky. A lower cap would
@@ -516,8 +495,7 @@ print(f"""
      number of anxious rolls (see marginal table above). No single change
      feels dramatic, but the cumulative effect from cap={cap_min} to cap={cap_max}
      is substantial -- {total_extra_rolls_low_to_high} extra anxious rolls worth
-     {total_extra_rolls_low_to_high * BEST_GBP_PER_ROLL:.2f}-\
-{total_extra_rolls_low_to_high * WORST_GBP_PER_ROLL:.2f} in potential spend.
+     £{roll_cost(total_extra_rolls_low_to_high):.2f} in potential spend.
 
   The interaction effects from the variance decomposition confirm that S1
   timing acts nearly independently of S2 and S3 (all interactions <1.5% of

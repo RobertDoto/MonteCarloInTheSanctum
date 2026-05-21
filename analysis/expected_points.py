@@ -74,8 +74,8 @@ USAGE:
 DEPENDENCIES:
   - numpy  (pip install numpy)   -- fast array math
   - scipy  (pip install scipy)   -- statistical functions for distribution analysis
-  - cupy   (pip install cupy-cuda12x) -- GPU acceleration (optional, NVIDIA only)
-    ^ replace "12x" with your CUDA version, e.g. cupy-cuda11x for CUDA 11
+  - cupy   (pip install cupy-cudaXXx) -- GPU acceleration (optional, NVIDIA only)
+    ^ replace "XXx" with your CUDA version (e.g. cupy-cuda12x for CUDA 12)
 """
 
 # --- IMPORTS ------------------------------------------------------------------
@@ -122,7 +122,7 @@ from scipy import stats as sp_stats
 # Unlike numpy, CuPy is NVIDIA-specific. It requires:
 #   1. An NVIDIA GPU (AMD and Intel GPUs are not compatible)
 #   2. CUDA drivers installed on the system
-#   3. The CuPy package installed (pip install cupy-cuda12x)
+#   3. The CuPy package installed (pip install cupy-cudaXXx, matching your CUDA version)
 # The detect_backend() function checks all three conditions.
 
 # Attempt to import CuPy at module level. This does NOT trigger GPU
@@ -156,7 +156,7 @@ def detect_backend():
             "gpu_available": False,
             "gpu_name": None,
             "gpu_vram_gb": None,
-            "reason": "CuPy is not installed. Install with: pip install cupy-cuda12x"
+            "reason": "CuPy is not installed or failed to import. Install the version matching your CUDA toolkit, e.g. pip install cupy-cuda12x (see https://docs.cupy.dev/en/stable/install.html)"
         }
 
     try:
